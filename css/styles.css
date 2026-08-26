@@ -53,6 +53,26 @@ html[data-theme="light"] {
 
 html {
   scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--pink) color-mix(in srgb, var(--bg) 88%, var(--pink));
+}
+
+html::-webkit-scrollbar {
+  width: 10px;
+}
+
+html::-webkit-scrollbar-track {
+  background: color-mix(in srgb, var(--bg) 88%, var(--pink));
+}
+
+html::-webkit-scrollbar-thumb {
+  background: var(--pink);
+  border-radius: var(--radius);
+  border: 2px solid color-mix(in srgb, var(--bg) 88%, var(--pink));
+}
+
+html::-webkit-scrollbar-thumb:hover {
+  background: var(--pink-heading);
 }
 
 body {
