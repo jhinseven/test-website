@@ -551,6 +551,9 @@ html[data-theme="light"] .hero__visual {
 .about__copy {
   display: flex;
   flex-direction: column;
+  /* Phones and tablets: heading first, photo under it. Desktop keeps
+     the HTML order (photo left, copy right). */
+  order: -1;
 }
 
 .about__text p {
@@ -1213,6 +1216,10 @@ html[data-theme="light"] .hero__visual {
   .about__inner {
     grid-template-columns: 0.85fr 1fr;
     gap: var(--space-xl);
+  }
+
+  .about__copy {
+    order: 0;
   }
 
   .music__grid,
