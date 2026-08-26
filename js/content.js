@@ -142,7 +142,7 @@ export const siteContent = {
         videoUrl: "https://youtu.be/1M5imeOmP1k?si=tHbuukg8Jk2jAgJl",
       },
       {
-        title: "My First Song Ever",
+        title: "My First Song Ever - Lil Brother",
         caption: "Visualizer / music video",
         thumbnail: "public/images/LilBrother-tn.png",
         videoUrl: "https://youtu.be/RQqht7-ibeU",
@@ -185,11 +185,11 @@ export const siteContent = {
     sectionTitle: "Latest Updates",
     items: [
       {
-        date: "DATE HERE 1",
-        title: "TITLE HERE 1",
-        text: "one or two sentences about a release or any kind of announcement.",
-        linkLabel: "Read more",
-        linkHref: "[REPLACE_WITH_UPDATE_1_URL]",
+        date: "August 2026",
+        title: "Join my Discord server!",
+        text: "Come hang out for new songs, friendly chats, and access to exclusive song snippets!",
+        linkLabel: "Join Discord",
+        linkHref: "https://discord.gg/ezebgj4hq",
       },
       {
         date: "DATE HERE 2",
