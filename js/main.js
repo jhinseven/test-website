@@ -450,7 +450,10 @@ function renderVideos() {
   }
   if (gridEl) {
     gridEl.replaceChildren(
-      ...(videos.items || []).slice(0, 6).map((video) => createVideoCard(video))
+      ...(videos.items || [])
+        .filter((video) => !isPlaceholder(video.videoUrl))
+        .slice(0, 7)
+        .map((video) => createVideoCard(video))
     );
   }
 

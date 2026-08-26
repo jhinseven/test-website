@@ -9,6 +9,20 @@
       content="Official website of Nini Uppuluri — a 15-year-old pop artist."
     />
     <title>Nini Uppuluri</title>
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem("nini-theme");
+          var theme =
+            saved === "light" || saved === "dark"
+              ? saved
+              : window.matchMedia("(prefers-color-scheme: dark)").matches
+                ? "dark"
+                : "light";
+          document.documentElement.setAttribute("data-theme", theme);
+        } catch (e) {}
+      })();
+    </script>
     <link rel="icon" href="./public/icons/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -20,6 +34,26 @@
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
+
+    <div class="butterflies" aria-hidden="true">
+      <svg class="butterflies__sprite" focusable="false">
+        <symbol id="icon-butterfly" viewBox="0 0 80 80">
+          <path fill="currentColor" d="M38 30C20 6 2 14 6 36c2 14 16 16 32 6z"/>
+          <path fill="currentColor" d="M42 30C60 6 78 14 74 36c-2 14-16 16-32 6z"/>
+          <path fill="currentColor" d="M38 42C24 38 10 52 16 64c8 10 18 2 24-14z"/>
+          <path fill="currentColor" d="M42 42C56 38 70 52 64 64c-8 10-18 2-24-14z"/>
+          <ellipse fill="currentColor" cx="40" cy="42" rx="3.1" ry="17"/>
+          <circle fill="currentColor" cx="40" cy="25" r="3.4"/>
+          <path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" d="M38 23C33 12 27 8 22 11"/>
+          <path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" d="M42 23C47 12 53 8 58 11"/>
+        </symbol>
+      </svg>
+      <span class="butterfly butterfly--1"><svg viewBox="0 0 80 80" focusable="false"><use href="#icon-butterfly"/></svg></span>
+      <span class="butterfly butterfly--2"><svg viewBox="0 0 80 80" focusable="false"><use href="#icon-butterfly"/></svg></span>
+      <span class="butterfly butterfly--3"><svg viewBox="0 0 80 80" focusable="false"><use href="#icon-butterfly"/></svg></span>
+      <span class="butterfly butterfly--4"><svg viewBox="0 0 80 80" focusable="false"><use href="#icon-butterfly"/></svg></span>
+      <span class="butterfly butterfly--5"><svg viewBox="0 0 80 80" focusable="false"><use href="#icon-butterfly"/></svg></span>
+    </div>
 
     <!-- ===== HEADER / NAVIGATION =====
          Edit labels here. Shop URL is in js/content.js (links.shop). -->

@@ -115,7 +115,7 @@ export const siteContent = {
   },
 
   // ===== EDIT THIS: FEATURED VIDEO =====
-  // 1 featured YouTube video, then 6 in the grid under it.
+  // 1 featured YouTube video, then up to 7 in the grid under it.
   // Paste a normal YouTube watch URL or an embed URL.
   // Example: "https://www.youtube.com/watch?v=REPLACE_WITH_VIDEO_ID"
   videos: {
@@ -140,6 +140,12 @@ export const siteContent = {
         caption: "Visualizer / music video",
         thumbnail: "[REPLACE_WITH_VIDEO_2_THUMBNAIL]",
         videoUrl: "https://youtu.be/1M5imeOmP1k?si=tHbuukg8Jk2jAgJl",
+      },
+      {
+        title: "My First Song Ever",
+        caption: "Visualizer / music video",
+        thumbnail: "public/images/LilBrother-tn.png",
+        videoUrl: "https://youtu.be/RQqht7-ibeU",
       },
       {
         title: "FIRE",

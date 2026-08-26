@@ -89,6 +89,155 @@ body {
   letter-spacing: 0.01em;
 }
 
+main,
+.site-footer {
+  position: relative;
+  z-index: 1;
+}
+
+.butterflies {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.butterflies__sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.butterfly {
+  position: absolute;
+  color: var(--pink-heading);
+  opacity: 0.38;
+}
+
+html[data-theme="light"] .butterfly {
+  color: #e45d8a;
+  opacity: 0.46;
+}
+
+.butterfly svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-origin: 50% 45%;
+  animation: butterfly-flap 3.2s ease-in-out infinite;
+}
+
+.butterfly--1 {
+  width: 2.95rem;
+  left: 3%;
+  top: 18%;
+  animation: butterfly-drift-a 48s ease-in-out infinite;
+}
+
+.butterfly--2 {
+  width: 2.35rem;
+  right: 5%;
+  top: 28%;
+  animation: butterfly-drift-b 58s ease-in-out infinite;
+}
+
+.butterfly--3 {
+  width: 3.35rem;
+  left: 6%;
+  top: 62%;
+  animation: butterfly-drift-c 52s ease-in-out infinite;
+}
+
+.butterfly--4 {
+  width: 2.2rem;
+  right: 7%;
+  top: 70%;
+  animation: butterfly-drift-a 62s ease-in-out infinite reverse;
+}
+
+.butterfly--5 {
+  width: 2.65rem;
+  left: 46%;
+  top: 86%;
+  animation: butterfly-drift-b 54s ease-in-out infinite;
+}
+
+@keyframes butterfly-flap {
+  0%,
+  100% {
+    transform: scaleX(1);
+  }
+  50% {
+    transform: scaleX(0.88);
+  }
+}
+
+@keyframes butterfly-drift-a {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(-12deg);
+  }
+  25% {
+    transform: translate(18vw, -16vh) rotate(8deg);
+  }
+  50% {
+    transform: translate(8vw, 14vh) rotate(-10deg);
+  }
+  75% {
+    transform: translate(-6vw, -8vh) rotate(12deg);
+  }
+}
+
+@keyframes butterfly-drift-b {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(8deg);
+  }
+  25% {
+    transform: translate(-16vw, 12vh) rotate(-12deg);
+  }
+  50% {
+    transform: translate(-4vw, -18vh) rotate(6deg);
+  }
+  75% {
+    transform: translate(10vw, 6vh) rotate(-8deg);
+  }
+}
+
+@keyframes butterfly-drift-c {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(-6deg);
+  }
+  25% {
+    transform: translate(12vw, 10vh) rotate(10deg);
+  }
+  50% {
+    transform: translate(-14vw, -6vh) rotate(-14deg);
+  }
+  75% {
+    transform: translate(6vw, -16vh) rotate(4deg);
+  }
+}
+
+@media (max-width: 799px) {
+  .butterfly--1,
+  .butterfly--2,
+  .butterfly--3,
+  .butterfly--4,
+  .butterfly--5 {
+    width: 1.95rem;
+  }
+
+  .butterfly--5 {
+    left: auto;
+    right: 8%;
+    top: 82%;
+  }
+}
+
 img {
   max-width: 100%;
   height: auto;
@@ -383,6 +532,10 @@ html[data-theme="light"] .theme-toggle__icon--sun {
 @media (prefers-reduced-motion: reduce) {
   .hero__promo {
     animation: none;
+  }
+
+  .butterflies {
+    display: none;
   }
 }
 
@@ -795,13 +948,13 @@ html[data-theme="light"] .hero__visual {
   height: 1.4rem;
 }
 
-/* Right-side rail. Smaller on phones so it can sit in the edge without
-   covering the page. Footer still has the same icons. */
+/* Right-side rail, under the header. Smaller on phones so it can sit
+   in the edge without covering the page. Footer still has the same icons. */
 .social-rail:not([hidden]) {
   display: flex;
   position: fixed;
-  top: auto;
-  bottom: max(1.25rem, env(safe-area-inset-bottom));
+  top: calc(var(--header-height) + 0.7rem);
+  bottom: auto;
   right: max(0.3rem, env(safe-area-inset-right));
   z-index: 15;
   flex-direction: column;
