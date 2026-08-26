@@ -1,23 +1,14 @@
 /**
  * Theme / light-dark mode
- * First visit follows the visitor's system setting. After they use the
- * toggle, that choice is stored in localStorage and wins on later visits.
+ * Always follows the visitor's system light/dark setting. The toggle can
+ * flip the page for this visit only; a reload or a system change snaps
+ * back to the OS theme. Nothing is stored in the browser.
  */
-
-const STORAGE_KEY = "nini-theme";
 
 function systemTheme() {
   return window.matchMedia("(prefers-color-scheme: dark)").matches
     ? "dark"
     : "light";
-}
-
-export function getPreferredTheme() {
-  const saved = localStorage.getItem(STORAGE_KEY);
-  if (saved === "light" || saved === "dark") {
-    return saved;
-  }
-  return systemTheme();
 }
 
 export function applyTheme(theme) {
@@ -34,13 +25,10 @@ export function applyTheme(theme) {
 }
 
 export function initTheme() {
-  applyTheme(getPreferredTheme());
+  applyTheme(systemTheme());
 
-  const media = window.matchMedia("(prefers-color-scheme: dark)");
-  media.addEventListener("change", () => {
-    if (!localStorage.getItem(STORAGE_KEY)) {
-      applyTheme(systemTheme());
-    }
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
+    applyTheme(systemTheme());
   });
 
   const toggle = document.querySelector("[data-theme-toggle]");
@@ -51,7 +39,6 @@ export function initTheme() {
       document.documentElement.getAttribute("data-theme") === "dark"
         ? "light"
         : "dark";
-    localStorage.setItem(STORAGE_KEY, next);
     applyTheme(next);
   });
 }
