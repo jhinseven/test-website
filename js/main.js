@@ -127,8 +127,8 @@ function renderAbout() {
 }
 
 /**
- * Spotify embed helper
- * Turns a normal Spotify track/album/playlist URL into an embed URL.
+ * Spotify embed helpers
+ * Turns a track/album/playlist URL into an embed URL or a Spotify URI.
  * Leave REPLACE_WITH placeholders as-is until you have real links.
  */
 function toSpotifyEmbed(url) {
@@ -137,8 +137,113 @@ function toSpotifyEmbed(url) {
   return url.replace("open.spotify.com/", "open.spotify.com/embed/");
 }
 
+function toSpotifyUri(url) {
+  if (!url || url.includes("REPLACE_WITH")) return "";
+  const cleaned = String(url).trim();
+  if (cleaned.startsWith("spotify:")) return cleaned.split("?")[0];
+
+  try {
+    const parsed = new URL(cleaned);
+    const parts = parsed.pathname.split("/").filter(Boolean);
+    const kinds = ["track", "album", "playlist", "episode", "show", "artist"];
+    const kind = parts.find((part) => kinds.includes(part));
+    const id = kind ? parts[parts.indexOf(kind) + 1] : "";
+    return kind && id ? `spotify:${kind}:${id}` : "";
+  } catch {
+    return "";
+  }
+}
+
 function isPlaceholder(value) {
   return !value || String(value).includes("REPLACE_WITH");
+}
+
+const spotifyControllers = new Set();
+
+function withSpotifyApi(setup) {
+  if (window.__spotifyIframeApi) setup(window.__spotifyIframeApi);
+  else (window.__spotifyReadyQueue || (window.__spotifyReadyQueue = [])).push(setup);
+}
+
+function pauseAllSpotify(exceptController) {
+  if (spotifyControllers.size > 0) {
+    spotifyControllers.forEach((controller) => {
+      if (controller === exceptController) return;
+      try {
+        controller.pause();
+      } catch {
+        // Ignore players that are not ready yet.
+      }
+    });
+    return;
+  }
+
+  document.querySelectorAll(".track__media iframe").forEach((iframe) => {
+    const src = iframe.getAttribute("src");
+    if (src) iframe.src = src;
+  });
+}
+
+function stopAllVideos(exceptMedia) {
+  document.querySelectorAll(".video__media").forEach((media) => {
+    if (media === exceptMedia) return;
+    const poster = media.niniPoster;
+    if (poster && media.querySelector("iframe")) {
+      media.replaceChildren(poster);
+    }
+  });
+}
+
+function mountSpotifyEmbeds() {
+  document.querySelectorAll(".track__embed").forEach((host) => {
+    if (host.dataset.spotifyMounted) return;
+    host.dataset.spotifyMounted = "true";
+    attachSpotifyController(
+      host,
+      host.dataset.spotifyEmbed,
+      host.dataset.spotifyFeatured === "true"
+    );
+  });
+}
+
+function fillSpotifyFallback(host, embedUrl) {
+  if (!host.isConnected || host.querySelector("iframe") || !embedUrl) return;
+
+  const iframe = document.createElement("iframe");
+  iframe.src = embedUrl;
+  iframe.title = host.title || "Spotify";
+  iframe.allow = "autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture";
+  iframe.loading = "lazy";
+  iframe.setAttribute("allowfullscreen", "");
+  host.replaceChildren(iframe);
+}
+
+function attachSpotifyController(host, embedUrl, featured) {
+  fillSpotifyFallback(host, embedUrl);
+
+  const uri = toSpotifyUri(embedUrl);
+  if (!uri) return;
+
+  withSpotifyApi((api) => {
+    const target = host.querySelector("iframe") || host;
+    if (!target.isConnected) return;
+
+    try {
+      api.createController(target, {
+        uri,
+        width: "100%",
+        height: featured ? "232" : "152",
+      }, (controller) => {
+        spotifyControllers.add(controller);
+        controller.addListener("playback_started", () => {
+          pauseAllSpotify(controller);
+          stopAllVideos();
+        });
+      });
+    } catch {
+      // Keep the regular embed if the API cannot take over.
+    }
+  });
 }
 
 function createTrackCard(track, featured = false) {
@@ -150,15 +255,12 @@ function createTrackCard(track, featured = false) {
 
   const embedUrl = toSpotifyEmbed(track.spotifyUrl);
   if (embedUrl) {
-    const iframe = document.createElement("iframe");
-    iframe.className = "track__embed";
-    iframe.src = embedUrl;
-    iframe.title = `${track.title} on Spotify`;
-    iframe.loading = "lazy";
-    iframe.allow =
-      "autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture";
-    iframe.setAttribute("allowfullscreen", "");
-    media.appendChild(iframe);
+    const host = document.createElement("div");
+    host.className = "track__embed";
+    host.title = `${track.title} on Spotify`;
+    host.dataset.spotifyEmbed = embedUrl;
+    if (featured) host.dataset.spotifyFeatured = "true";
+    media.appendChild(host);
   } else {
     const placeholder = document.createElement("div");
     placeholder.className = "track__placeholder";
@@ -201,6 +303,7 @@ function renderMusic() {
       ...music.tracks.slice(0, 6).map((track) => createTrackCard(track))
     );
   }
+  mountSpotifyEmbeds();
 
   if (viewAllEl) {
     viewAllEl.textContent = music.viewAllLabel;
@@ -216,6 +319,7 @@ function renderMusic() {
       extraEl.replaceChildren(
         ...music.more.map((track) => createTrackCard(track))
       );
+      mountSpotifyEmbeds();
       viewAllEl.addEventListener("click", (event) => {
         event.preventDefault();
         extraEl.hidden = false;
@@ -407,7 +511,10 @@ function createVideoCard(video, featured = false) {
     }
 
     poster.appendChild(img);
+    media.niniPoster = poster;
     poster.addEventListener("click", () => {
+      stopAllVideos(media);
+      pauseAllSpotify();
       media.replaceChildren(createYouTubeIframe(embedUrl, video.title));
     });
     media.appendChild(poster);

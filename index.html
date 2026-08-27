@@ -27,6 +27,17 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./css/styles.css" />
+    <script>
+      // Must exist before the Spotify iframe API script loads.
+      window.__spotifyReadyQueue = [];
+      window.onSpotifyIframeApiReady = function (api) {
+        window.__spotifyIframeApi = api;
+        window.__spotifyReadyQueue.splice(0).forEach(function (setup) {
+          setup(api);
+        });
+      };
+    </script>
+    <script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>

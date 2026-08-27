@@ -748,14 +748,16 @@ html[data-theme="light"] .hero__visual {
   box-shadow: 0 0 0 1px rgba(255, 183, 206, 0.25);
 }
 
-.track__embed {
+.track__embed,
+.track__media iframe {
   width: 100%;
   height: 152px;
   border: 0;
   display: block;
 }
 
-.track--featured .track__embed {
+.track--featured .track__embed,
+.track--featured .track__media iframe {
   height: 232px;
 }
 

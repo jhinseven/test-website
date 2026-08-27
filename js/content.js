@@ -58,7 +58,7 @@ export const siteContent = {
 
   // ===== EDIT THIS: FEATURED MUSIC =====
   // Add or replace songs here. The first item is the large featured player.
-  // The next 6 items appear in the grid under it.
+  // The next 7 items appear in the grid under it.
   // Use a Spotify track or album URL (or an embed URL).
   // Example: "https://open.spotify.com/embed/track/REPLACE_WITH_TRACK_ID"
   music: {
