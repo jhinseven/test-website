@@ -188,7 +188,7 @@ export const siteContent = {
         date: "August 2026",
         title: "Join my Discord server!",
         text: "Come hang out for new songs, friendly chats, and access to exclusive song snippets!",
-        linkLabel: "Join Discord",
+        linkLabel: "Click here to join!",
         linkHref: "https://discord.gg/ezebgj4hq",
       },
       {
