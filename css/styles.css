@@ -414,6 +414,8 @@ button {
 .theme-toggle {
   width: 2.5rem;
   height: 2.5rem;
+  padding: 0;
+  line-height: 0;
   border-radius: 50%;
   border: 1px solid var(--border);
   background: transparent;
@@ -427,6 +429,12 @@ button {
 .theme-toggle:focus-visible {
   border-color: var(--pink);
   background: var(--pink-soft);
+}
+
+.theme-toggle__icon {
+  width: 1.15rem;
+  height: 1.15rem;
+  display: block;
 }
 
 .theme-toggle__icon--sun,
