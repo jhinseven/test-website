@@ -213,10 +213,10 @@ export const siteContent = {
   // at the bottom of this file. A platform with a placeholder URL is skipped.
   socials: {
     // ===== EDIT THIS: BUSINESS EMAIL =====
-    // Shown on the contact section for bookings, press, and business enquiries.
+    // Shown on the contact section for business enquiries.
     // Leave the placeholder to hide the email line there.
-    businessEmailLabel: "Business & bookings",
-    businessEmail: "[REPLACE_WITH_BUSINESS_EMAIL]",
+    businessEmailLabel: "Business Enquiries",
+    businessEmail: "something@email.com",
   },
 
   // ===== EDIT THIS: MAILING LIST (MAILCHIMP) =====
@@ -250,7 +250,7 @@ export const siteContent = {
   contact: {
     eyebrow: "Say hello",
     title: "Get in touch",
-    text: "Questions, bookings, or just want to say hi? Send a message.",
+    text: "Do you have a question or just want to say hi? Send a message.",
     nameLabel: "Your name",
     namePlaceholder: "First and last name",
     emailLabel: "Your email",
