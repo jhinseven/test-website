@@ -1,6 +1,6 @@
 /**
  * Page startup
- * Fills the Hero, About, Music, Video, Updates, Socials, Mailing List,
+ * Fills the Hero, About, Music, Video, Shorts, Updates, Socials, Mailing List,
  * Contact, and Footer from js/content.js, and turns on the theme toggle
  * and mobile navigation.
  */
@@ -185,7 +185,7 @@ function pauseAllSpotify(exceptController) {
 }
 
 function stopAllVideos(exceptMedia) {
-  document.querySelectorAll(".video__media").forEach((media) => {
+  document.querySelectorAll(".video__media, .short__media").forEach((media) => {
     if (media === exceptMedia) return;
     const poster = media.niniPoster;
     if (poster && media.querySelector("iframe")) {
@@ -476,54 +476,107 @@ function createYouTubeIframe(embedUrl, title) {
   return iframe;
 }
 
+function setYouTubeThumb(img, videoId, vertical) {
+  const verticalCovers = [
+    `https://i.ytimg.com/vi/${videoId}/oardefault.jpg`,
+    `https://i.ytimg.com/vi/${videoId}/oar2.jpg`,
+    `https://i.ytimg.com/vi/${videoId}/oar1.jpg`,
+    `https://i.ytimg.com/vi/${videoId}/oar3.jpg`,
+  ];
+  const landscape = [
+    `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`,
+    `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
+    `https://i.ytimg.com/vi/${videoId}/sddefault.jpg`,
+  ];
+  const queue = vertical ? [...verticalCovers, ...landscape] : landscape;
+
+  const tryAt = (index) => {
+    if (index >= queue.length) return;
+
+    const onLoad = () => {
+      cleanup();
+      const dummy = img.naturalWidth <= 120;
+      const wantTall = vertical && index < verticalCovers.length;
+      const isTall = img.naturalHeight > img.naturalWidth;
+      if (dummy || (wantTall && !isTall)) tryAt(index + 1);
+    };
+
+    const onError = () => {
+      cleanup();
+      tryAt(index + 1);
+    };
+
+    const cleanup = () => {
+      img.removeEventListener("load", onLoad);
+      img.removeEventListener("error", onError);
+    };
+
+    img.addEventListener("load", onLoad);
+    img.addEventListener("error", onError);
+    img.src = queue[index];
+
+    // Cached images can finish before the listeners are attached.
+    if (img.complete) {
+      if (img.naturalWidth > 0) onLoad();
+      else onError();
+    }
+  };
+
+  tryAt(0);
+}
+
+function attachYouTubePoster(media, video, vertical = false) {
+  const videoId = toYouTubeId(video.videoUrl);
+  const embedUrl = toYouTubeEmbed(video.videoUrl);
+
+  if (!embedUrl || !videoId) {
+    const placeholder = document.createElement("div");
+    placeholder.className = "video__placeholder";
+    placeholder.textContent = video.videoUrl || "[REPLACE_WITH_VIDEO_URL]";
+    media.appendChild(placeholder);
+    return;
+  }
+
+  const poster = document.createElement("button");
+  poster.type = "button";
+  poster.className = "video__poster";
+  poster.setAttribute("aria-label", `Play ${video.title || "Short"}`);
+
+  const img = document.createElement("img");
+  img.alt = "";
+  img.referrerPolicy = "no-referrer";
+  img.loading = vertical ? "eager" : "lazy";
+  if (isPlaceholder(video.thumbnail)) {
+    setYouTubeThumb(img, videoId, vertical);
+  } else {
+    img.src = video.thumbnail;
+  }
+
+  poster.appendChild(img);
+
+  if (vertical) {
+    const play = document.createElement("span");
+    play.className = "short__play";
+    play.setAttribute("aria-hidden", "true");
+    poster.appendChild(play);
+  }
+
+  media.niniPoster = poster;
+  poster.addEventListener("click", () => {
+    stopAllVideos(media);
+    pauseAllSpotify();
+    media.replaceChildren(createYouTubeIframe(embedUrl, video.title));
+  });
+  media.appendChild(poster);
+}
+
 function createVideoCard(video, featured = false) {
   const article = document.createElement("article");
   article.className = featured ? "video video--featured" : "video";
 
   const media = document.createElement("div");
   media.className = "video__media";
-
-  const videoId = toYouTubeId(video.videoUrl);
-  const embedUrl = toYouTubeEmbed(video.videoUrl);
-
-  if (embedUrl && videoId) {
-    // Show YouTube's own thumbnail first. The player (and its red play
-    // icon) only loads after a click, so the still image stays clean.
-    const poster = document.createElement("button");
-    poster.type = "button";
-    poster.className = "video__poster";
-    poster.setAttribute("aria-label", `Play ${video.title}`);
-
-    const img = document.createElement("img");
-    img.alt = "";
-    img.loading = "lazy";
-    if (isPlaceholder(video.thumbnail)) {
-      // maxresdefault is the clean still. If YouTube has none, it serves a
-      // tiny dummy image, so we fall back to sddefault.
-      const maxRes = `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`;
-      const sd = `https://i.ytimg.com/vi/${videoId}/sddefault.jpg`;
-      img.src = maxRes;
-      img.addEventListener("load", () => {
-        if (img.naturalWidth <= 120) img.src = sd;
-      }, { once: true });
-    } else {
-      img.src = video.thumbnail;
-    }
-
-    poster.appendChild(img);
-    media.niniPoster = poster;
-    poster.addEventListener("click", () => {
-      stopAllVideos(media);
-      pauseAllSpotify();
-      media.replaceChildren(createYouTubeIframe(embedUrl, video.title));
-    });
-    media.appendChild(poster);
-  } else {
-    const placeholder = document.createElement("div");
-    placeholder.className = "video__placeholder";
-    placeholder.textContent = video.videoUrl || "[REPLACE_WITH_VIDEO_URL]";
-    media.appendChild(placeholder);
-  }
+  attachYouTubePoster(media, video);
 
   const meta = document.createElement("div");
   meta.className = "video__meta";
@@ -591,6 +644,138 @@ function renderVideos() {
       viewAllEl.hidden = true;
     }
   }
+}
+
+function normalizeShort(item) {
+  if (typeof item === "string") return { videoUrl: item.trim(), title: "" };
+  if (!item) return { videoUrl: "", title: "" };
+  return {
+    videoUrl: String(item.videoUrl || item.url || "").trim(),
+    title: item.title ? String(item.title) : "",
+  };
+}
+
+const youtubeTitleCache = new Map();
+
+function fetchYouTubeOembedJsonp(jsonUrl) {
+  return new Promise((resolve, reject) => {
+    const callbackName = "ytOembed_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+    const script = document.createElement("script");
+    const timeout = window.setTimeout(() => {
+      cleanup();
+      reject(new Error("timeout"));
+    }, 8000);
+
+    function cleanup() {
+      window.clearTimeout(timeout);
+      try {
+        delete window[callbackName];
+      } catch {
+        window[callbackName] = undefined;
+      }
+      script.remove();
+    }
+
+    window[callbackName] = (data) => {
+      cleanup();
+      resolve(data);
+    };
+
+    script.src = `${jsonUrl}&callback=${callbackName}`;
+    script.onerror = () => {
+      cleanup();
+      reject(new Error("network"));
+    };
+    document.head.appendChild(script);
+  });
+}
+
+function fetchYouTubeTitle(videoUrl) {
+  const id = toYouTubeId(videoUrl);
+  if (!id) return Promise.resolve("");
+  if (youtubeTitleCache.has(id)) return youtubeTitleCache.get(id);
+
+  const watchUrl = `https://www.youtube.com/watch?v=${id}`;
+  const jsonUrl = `https://www.youtube.com/oembed?format=json&url=${encodeURIComponent(watchUrl)}`;
+
+  const request = fetch(jsonUrl)
+    .then((response) => {
+      if (!response.ok) throw new Error("oembed");
+      return response.json();
+    })
+    .catch(() => fetchYouTubeOembedJsonp(jsonUrl))
+    .then((data) => (data && data.title) || "")
+    .catch(() => "");
+
+  youtubeTitleCache.set(id, request);
+  return request;
+}
+
+function createShortCard(short) {
+  const article = document.createElement("article");
+  article.className = "short";
+
+  const media = document.createElement("div");
+  media.className = "short__media";
+  attachYouTubePoster(media, short, true);
+
+  const title = document.createElement("h4");
+  title.className = "short__title";
+  title.textContent = short.title || "";
+
+  if (!short.title || isPlaceholder(short.title)) {
+    fetchYouTubeTitle(short.videoUrl).then((fetched) => {
+      if (!fetched || !title.isConnected) return;
+      short.title = fetched;
+      title.textContent = fetched;
+      const poster = media.querySelector(".video__poster");
+      if (poster) poster.setAttribute("aria-label", `Play ${fetched}`);
+    });
+  }
+
+  article.append(media, title);
+  return article;
+}
+
+function renderShorts() {
+  const shorts = siteContent.shorts;
+  const section = document.querySelector("[data-shorts]");
+  if (!section) return;
+
+  const items = ((shorts && shorts.items) || [])
+    .map(normalizeShort)
+    .filter((item) => !isPlaceholder(item.videoUrl))
+    .slice(0, 4);
+
+  if (!shorts || items.length === 0) {
+    section.hidden = true;
+    return;
+  }
+
+  const titleEl = document.querySelector("[data-shorts-title]");
+  const gridEl = document.querySelector("[data-shorts-grid]");
+  const viewAllEl = document.querySelector("[data-shorts-view-all]");
+
+  if (titleEl) titleEl.textContent = shorts.sectionTitle;
+  if (gridEl) gridEl.replaceChildren(...items.map(createShortCard));
+
+  if (viewAllEl) {
+    viewAllEl.textContent = shorts.viewAllLabel || "Watch more Shorts";
+    const href = !isPlaceholder(shorts.viewAllHref)
+      ? shorts.viewAllHref
+      : !isPlaceholder(links.youtube)
+        ? `${links.youtube.replace(/\/$/, "")}/shorts`
+        : "";
+
+    if (href) {
+      viewAllEl.setAttribute("href", href);
+      viewAllEl.hidden = false;
+    } else {
+      viewAllEl.hidden = true;
+    }
+  }
+
+  section.hidden = false;
 }
 
 function createUpdateCard(update) {
@@ -1052,6 +1237,7 @@ renderHero();
 renderAbout();
 renderMusic();
 renderVideos();
+renderShorts();
 renderUpdates();
 renderSocials();
 initSocialRail();

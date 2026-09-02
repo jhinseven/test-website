@@ -176,6 +176,22 @@ export const siteContent = {
     more: [],
   },
 
+  // ===== EDIT THIS: SHORTS =====
+  // Shown under Featured Video. Newest first. The row shows at most 4.
+  // Paste YouTube Shorts URLs only. Title and thumbnail come from YouTube.
+  // Leave the list empty to hide the Shorts row.
+  shorts: {
+    sectionTitle: "Shorts",
+    viewAllLabel: "Watch more Shorts",
+    viewAllHref: "https://www.youtube.com/channel/UC96TGOrWeIWxr6noks2ipzw/shorts",
+    items: [
+      "https://youtube.com/shorts/2ysdlf5PO_U?si=o0DiZhBOjpZlV-4e",
+      "https://youtube.com/shorts/DA4ak02m9Ms?si=Y8CMx9J4eC6fTe9F",
+      "https://youtube.com/shorts/aVj_Qbfqsvc?si=rfg8qYxQC4Z92BNH",
+      "https://youtube.com/shorts/2FbRVIU5f58?si=pralNFL30ZgX9wkB",
+    ],
+  },
+
   // ===== EDIT THIS: LATEST UPDATES =====
   // Newest first. Keep it to 3 cards — the section shows at most 3.
   // Delete an item to show fewer. Delete all of them to hide the section.

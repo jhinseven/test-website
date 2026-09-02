@@ -892,6 +892,124 @@ html[data-theme="light"] .hero__visual {
   font-size: 0.92rem;
 }
 
+.shorts {
+  margin-top: var(--space-xl);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--border);
+}
+
+.shorts__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.shorts__header .btn {
+  min-height: 2.1rem;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+}
+
+.shorts__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.55rem, 3.4vw, 2.15rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--pink-heading);
+}
+
+.shorts__row {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(9.75rem, 42vw);
+  gap: var(--space-md);
+  overflow-x: auto;
+  padding-bottom: 0.45rem;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--pink) transparent;
+}
+
+.shorts__row::-webkit-scrollbar {
+  height: 8px;
+}
+
+.shorts__row::-webkit-scrollbar-thumb {
+  background: var(--pink);
+  border-radius: var(--radius);
+}
+
+.short {
+  scroll-snap-align: start;
+  display: grid;
+  gap: 0.7rem;
+  min-width: 0;
+}
+
+.short__media {
+  position: relative;
+  aspect-ratio: 9 / 16;
+  border-radius: 1rem;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  transition: border-color var(--ease);
+}
+
+.short__media:hover,
+.short__media:focus-within {
+  border-color: var(--pink);
+}
+
+.short__media .video__embed {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.short__play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 50%;
+  background: rgba(10, 10, 10, 0.46);
+  border: 1px solid rgba(255, 183, 206, 0.55);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.short__play::after {
+  content: "";
+  position: absolute;
+  left: 52%;
+  top: 50%;
+  transform: translate(-40%, -50%);
+  border-style: solid;
+  border-width: 0.42rem 0 0.42rem 0.7rem;
+  border-color: transparent transparent transparent var(--white);
+}
+
+.short__title {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.35;
+  min-height: 2.7em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
 .updates__grid {
   display: grid;
   gap: var(--space-md);
@@ -1390,6 +1508,23 @@ html[data-theme="light"] .hero__visual {
   .videos__grid,
   .videos__extra {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .shorts__row {
+    grid-auto-flow: unset;
+    grid-auto-columns: unset;
+    grid-template-columns: repeat(auto-fit, minmax(11rem, 14.5rem));
+    justify-content: start;
+    overflow: visible;
+    padding-bottom: 0;
+    scroll-snap-type: none;
+  }
+
+  .shorts__header .btn {
+    min-height: 2.85rem;
+    padding: 0.7rem 1.35rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
   }
 
   /* Cards share the row evenly, whether there are 1, 2, or 3 of them. */
