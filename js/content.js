@@ -260,7 +260,6 @@ export const siteContent = {
   contact: {
     eyebrow: "Say hello",
     title: "Get in touch",
-    text: "Do you have a question or just want to say hi? Send a message.",
     nameLabel: "Your name",
     namePlaceholder: "First and last name",
     emailLabel: "Your email",
