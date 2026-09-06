@@ -36,15 +36,23 @@ export const siteContent = {
   },
 
   // ===== EDIT THIS: ABOUT =====
-  // The paragraphs below are starter copy. Replace them with Nini's own words.
-  // Keep each paragraph short — 2 or 3 sentences reads best.
+  // `preview` is what visitors see first. Read more swaps it for `paragraphs`.
   about: {
     eyebrow: "About",
     title: "Hey, I'm Nini",
-    paragraphs: [
-      "I'm a 15-year-old pop artist. I write and sing songs about the things I'm living through right now.",
-      "a few sentences on how you started, what you're working on, or what your music is about.",
+    preview: [
+      "I'm a 15-year-old pop artist finishing 12th grade, writing songs inspired by my life and the people around me. My love for music really grew during the 2021 lockdown, when my parents heard me singing Taylor Swift's \"Blank Space\" and encouraged me to keep going. Since then, I've been writing, singing, and releasing my own music. ✨️",
     ],
+    paragraphs: [
+      "I'm a 15-year-old pop artist finishing up 12th grade. I write songs inspired by my own experiences and stories from the people around me.",
+      "I've been humming songs since I was 2, but my love for music really grew during the 2021 lockdown. It started when my parents heard me singing Taylor Swift's \"Blank Space\" and encouraged me to keep going—which I was really excited about! From there, I sang karaoke to artists like Taylor Swift, Olivia Rodrigo, Katy Perry, Billy Joel, and Sammy Davis Jr.",
+      "Eventually, I started writing my own songs too. My first song, \"Lil Brother,\" was inspired by my sweet and caring little brother, and I also have a sweet little sister who means so much to me. 😊",
+      "Since then, I've kept writing, singing, and releasing music. I'm so grateful to God, my family, friends, my team, and everyone supporting me along the way. ✨️",
+      "You can follow my journey through the socials linked here. Thank you for supporting my music! 😊",
+    ],
+    signOff: "xoxo,\nNini Uppuluri :)",
+    readMoreLabel: "Read more",
+    readLessLabel: "Show less",
     // ===== EDIT THIS: ABOUT IMAGE =====
     // Put the photo in public/images/ and use a path like "public/images/nini-about.jpg"
     image: "public/images/nini-about.png",

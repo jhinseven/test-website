@@ -86,6 +86,7 @@ function renderAbout() {
   const about = siteContent.about;
   if (!about) return;
 
+  const section = document.querySelector("#about");
   const eyebrowEl = document.querySelector("[data-about-eyebrow]");
   const titleEl = document.querySelector("[data-about-title]");
   const textEl = document.querySelector("[data-about-text]");
@@ -97,13 +98,64 @@ function renderAbout() {
   if (titleEl) titleEl.textContent = about.title;
 
   if (textEl) {
-    textEl.replaceChildren(
-      ...(about.paragraphs || []).map((text) => {
-        const p = document.createElement("p");
-        p.textContent = text;
-        return p;
-      })
-    );
+    const preview = about.preview || [];
+    const paragraphs = about.paragraphs || [];
+    const signOff = about.signOff || "";
+    const hasMore = preview.length > 0 && paragraphs.length > 0;
+
+    const makeParagraph = (text, className) => {
+      const p = document.createElement("p");
+      if (className) p.className = className;
+      p.textContent = text;
+      return p;
+    };
+
+    const makePanel = (className, id, texts) => {
+      const wrap = document.createElement("div");
+      wrap.className = className;
+      if (id) wrap.id = id;
+      const inner = document.createElement("div");
+      inner.className = `${className}-inner`;
+      inner.append(...texts.map((text) => makeParagraph(text)));
+      wrap.append(inner);
+      return wrap;
+    };
+
+    if (hasMore) {
+      const previewWrap = makePanel("about__preview", "", preview);
+      const restWrap = makePanel("about__rest", "about-more", paragraphs);
+      restWrap.setAttribute("aria-hidden", "true");
+      restWrap.inert = true;
+
+      const toggle = document.createElement("button");
+      toggle.type = "button";
+      toggle.className = "about__more-toggle";
+      toggle.setAttribute("aria-expanded", "false");
+      toggle.setAttribute("aria-controls", "about-more");
+      toggle.textContent = about.readMoreLabel || "Read more";
+
+      toggle.addEventListener("click", () => {
+        const open = !section?.classList.contains("is-expanded");
+        if (section) section.classList.toggle("is-expanded", open);
+        previewWrap.inert = open;
+        restWrap.inert = !open;
+        restWrap.setAttribute("aria-hidden", String(!open));
+        toggle.setAttribute("aria-expanded", String(open));
+        toggle.textContent = open
+          ? about.readLessLabel || "Show less"
+          : about.readMoreLabel || "Read more";
+      });
+
+      const nodes = [previewWrap, restWrap];
+      if (signOff) nodes.push(makeParagraph(signOff, "about__signoff"));
+      nodes.push(toggle);
+      textEl.replaceChildren(...nodes);
+    } else {
+      const shown = paragraphs.length ? paragraphs : preview;
+      const nodes = shown.map((text) => makeParagraph(text));
+      if (signOff) nodes.push(makeParagraph(signOff, "about__signoff"));
+      textEl.replaceChildren(...nodes);
+    }
   }
 
   if (!isPlaceholder(about.image) && imageEl) {
