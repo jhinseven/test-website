@@ -215,20 +215,6 @@ export const siteContent = {
         linkLabel: "Click here to join!",
         linkHref: "https://discord.gg/ezebgj4hq",
       },
-      {
-        date: "DATE HERE 2",
-        title: "TITLE HERE 2",
-        text: "one or two sentences about a release or any kind of announcement.",
-        linkLabel: "Read more",
-        linkHref: "[REPLACE_WITH_UPDATE_1_URL]",
-      },
-      {
-        date: "DATE HERE 3",
-        title: "TITLE HERE 3",
-        text: "one or two sentences about a release or any kind of announcement.",
-        linkLabel: "Read more",
-        linkHref: "[REPLACE_WITH_UPDATE_1_URL]",
-      },
     ],
   },
 
@@ -240,7 +226,7 @@ export const siteContent = {
     // Shown on the contact section for business enquiries.
     // Leave the placeholder to hide the email line there.
     businessEmailLabel: "Business Enquiries",
-    businessEmail: "something@email.com",
+    businessEmail: "",
   },
 
   // ===== EDIT THIS: MAILING LIST (MAILCHIMP) =====
