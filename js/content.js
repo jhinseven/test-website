@@ -240,7 +240,7 @@ export const siteContent = {
   mailingList: {
     eyebrow: "Newsletter",
     title: "Join the mailing list",
-    text: "Be first to hear about new songs, videos, and shows.",
+    text: "Be first to hear about new songs, videos, and other stuff!",
     emailLabel: "Email address",
     emailPlaceholder: "you@example.com",
     buttonLabel: "Subscribe",
