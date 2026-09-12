@@ -79,7 +79,11 @@ function renderHero() {
   }
 
   const shopEl = document.querySelector("[data-nav-shop]");
-  if (shopEl) shopEl.setAttribute("href", links.shop);
+  if (shopEl) {
+    const hasShop = !isPlaceholder(links.shop);
+    shopEl.hidden = !hasShop;
+    if (hasShop) shopEl.setAttribute("href", links.shop);
+  }
 }
 
 function renderAbout() {
@@ -452,7 +456,7 @@ function initNav() {
     });
 
     // The last section often cannot reach the spy line, so treat the
-    // bottom of the page as that section (Subscribe, in the current layout).
+    // bottom of the page as that section (Contact, in the current layout).
     const atPageEnd =
       window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
     if (atPageEnd && lastVisibleId) occupyingId = lastVisibleId;
@@ -1028,8 +1032,14 @@ function postToMailchimp(actionUrl, email, honeypotName) {
  */
 function renderMailingList() {
   const mailing = siteContent.mailingList;
+  const section = document.querySelector("#mailing-list");
+  const subscribeNav = document.querySelector("[data-nav-subscribe]");
   const form = document.querySelector("[data-mailing-form]");
-  if (!mailing || !form) return;
+  const hide = !mailing || mailing.hidden;
+
+  if (section) section.hidden = hide;
+  if (subscribeNav) subscribeNav.hidden = hide;
+  if (hide || !form) return;
 
   const eyebrowEl = document.querySelector("[data-mailing-eyebrow]");
   const titleEl = document.querySelector("[data-mailing-title]");
@@ -1132,7 +1142,6 @@ function renderContact() {
   const text = {
     "[data-contact-eyebrow]": contact.eyebrow,
     "[data-contact-title]": contact.title,
-    "[data-contact-text]": contact.text,
     "[data-contact-name-label]": contact.nameLabel,
     "[data-contact-email-label]": contact.emailLabel,
     "[data-contact-message-label]": contact.messageLabel,
@@ -1140,8 +1149,15 @@ function renderContact() {
 
   Object.entries(text).forEach(([selector, value]) => {
     const el = document.querySelector(selector);
-    if (el) el.textContent = value;
+    if (el && value) el.textContent = value;
   });
+
+  const introEl = document.querySelector("[data-contact-text]");
+  if (introEl) {
+    const intro = contact.text || "";
+    introEl.textContent = intro;
+    introEl.hidden = !intro;
+  }
 
   if (nameEl) nameEl.placeholder = contact.namePlaceholder;
   if (emailEl) emailEl.placeholder = contact.emailPlaceholder;
@@ -1189,7 +1205,7 @@ function renderContact() {
     );
 
     if (firstInvalid) {
-      setNote("Please fill in your name, a valid email, and a message.", true);
+      setNote("Please fill in your name, a valid email, and an enquiry.", true);
       firstInvalid.focus();
       return;
     }

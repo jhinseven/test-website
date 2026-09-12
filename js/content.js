@@ -230,6 +230,7 @@ export const siteContent = {
   },
 
   // ===== EDIT THIS: MAILING LIST (MAILCHIMP) =====
+  // Set hidden to false to show this section and the Subscribe nav button.
   // How to get the two values below:
   //   Mailchimp > Audience > Signup forms > Embedded form
   //   1. formAction  = the <form action="..."> URL in the generated code
@@ -238,6 +239,7 @@ export const siteContent = {
   // Both are public form values, not secrets, so they belong here.
   // Until formAction is filled in, the form shows a short "not connected" note.
   mailingList: {
+    hidden: true,
     eyebrow: "Newsletter",
     title: "Join the mailing list",
     text: "Be first to hear about new songs, videos, and other stuff!",
@@ -258,17 +260,18 @@ export const siteContent = {
   // Until it is filled in, the form is disabled and the email below is shown
   // instead. The email address itself is edited once, in `socials` above.
   contact: {
-    eyebrow: "Say hello",
-    title: "Get in touch",
+    eyebrow: "Contact",
+    title: "Business Enquiries",
+    text: "For collaborations and other business enquiries only.",
     nameLabel: "Your name",
     namePlaceholder: "First and last name",
     emailLabel: "Your email",
     emailPlaceholder: "you@example.com",
-    messageLabel: "Message",
-    messagePlaceholder: "Write your message here…",
-    buttonLabel: "Send message",
+    messageLabel: "Enquiry",
+    messagePlaceholder: "Tell us about your enquiry…",
+    buttonLabel: "Send enquiry",
     sendingMessage: "Sending…",
-    successMessage: "Thanks! Your message is on its way.",
+    successMessage: "Thanks — your enquiry is on its way.",
     errorMessage: "Something went wrong. Please try again, or use the email below.",
     directEmailLabel: "Or email directly:",
     formEndpoint: "https://formspree.io/f/xgawjlpn",
@@ -296,5 +299,6 @@ export const links = {
   tiktok: "https://www.tiktok.com/@niniuppuluri",
   youtube: "https://www.youtube.com/channel/UC96TGOrWeIWxr6noks2ipzw",
   spotify: "https://open.spotify.com/artist/13XNrE7VNUoipQC30YNyHA",
+  // The Shop button stays hidden until this is a real URL.
   shop: "[REPLACE_WITH_SHOP_URL]",
 };
