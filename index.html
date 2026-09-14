@@ -71,8 +71,9 @@
           <a href="#music">Music</a>
           <a href="#videos">Videos</a>
           <a href="#updates">Updates</a>
+          <a href="#gallery">Gallery</a>
           <a href="#contact">Contact</a>
-          <a href="#mailing-list" data-nav-subscribe hidden>
+          <a href="#mailing-list" data-nav-subscribe>
             <svg class="nav__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
               <path fill="currentColor" d="M1.5 8.67v8.58a3 3 0 0 0 3 3h15a3 3 0 0 0 3-3V8.67l-8.93 5.5a3 3 0 0 1-3.14 0l-8.93-5.5Z"/>
               <path fill="currentColor" d="M22.5 6.91V6.75a3 3 0 0 0-3-3h-15a3 3 0 0 0-3 3v.16l9.71 6a1.5 1.5 0 0 0 1.58 0l9.71-6Z"/>
@@ -194,6 +195,7 @@
           </div>
         </div>
       </section>
+
       <!-- ===== LATEST UPDATES =====
            Announcement cards come from js/content.js (max 3) -->
       <section id="updates" class="section updates" aria-labelledby="updates-heading" hidden>
@@ -205,6 +207,33 @@
             </div>
           </div>
           <div class="updates__grid" data-updates-grid></div>
+        </div>
+      </section>
+
+      <!-- ===== GALLERY =====
+           Photos come from js/content.js. Mobile shows 1, desktop shows 3. -->
+      <section id="gallery" class="section gallery" aria-labelledby="gallery-heading" hidden>
+        <div class="section__inner">
+          <div class="section__header">
+            <div>
+              <p class="section__eyebrow" data-gallery-eyebrow>Photos</p>
+              <h2 class="section__title" id="gallery-heading" data-gallery-title>Gallery</h2>
+            </div>
+          </div>
+          <div class="gallery__stage">
+            <button type="button" class="gallery__arrow gallery__arrow--prev" data-gallery-prev aria-label="Previous photos">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14.5 5.5 8 12l6.5 6.5"/>
+              </svg>
+            </button>
+            <div class="gallery__viewport" data-gallery-viewport aria-live="polite"></div>
+            <button type="button" class="gallery__arrow gallery__arrow--next" data-gallery-next aria-label="Next photos">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9.5 5.5 16 12l-6.5 6.5"/>
+              </svg>
+            </button>
+          </div>
+          <button type="button" class="btn btn--ghost gallery__show-all" data-gallery-show-all>Show all</button>
         </div>
       </section>
       <!-- ===== CONTACT / BUSINESS ENQUIRIES =====
@@ -250,7 +279,7 @@
       <!-- ===== MAILING LIST =====
            Wording and the Mailchimp form URL come from js/content.js.
            Submitting posts straight to Mailchimp; no keys live in this code. -->
-      <section id="mailing-list" class="section mailing" aria-labelledby="mailing-heading" hidden>
+      <section id="mailing-list" class="section mailing" aria-labelledby="mailing-heading">
         <div class="section__inner mailing__inner">
           <p class="section__eyebrow" data-mailing-eyebrow>Newsletter</p>
           <h2 class="section__title" id="mailing-heading" data-mailing-title>Join the mailing list</h2>
@@ -280,6 +309,29 @@
       </section>
     </main>
 
+    <dialog class="gallery-overlay" data-gallery-overlay aria-labelledby="gallery-overlay-title">
+      <div class="gallery-overlay__panel">
+        <div class="gallery-overlay__bar">
+          <h3 class="gallery-overlay__title" id="gallery-overlay-title">All photos</h3>
+          <button type="button" class="gallery-overlay__close" data-gallery-close aria-label="Close">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M6 6l12 12M18 6 6 18"/>
+            </svg>
+          </button>
+        </div>
+        <div class="gallery-overlay__grid" data-gallery-overlay-grid></div>
+      </div>
+    </dialog>
+
+    <dialog class="gallery-zoom" data-gallery-zoom aria-label="Zoomed photo">
+      <button type="button" class="gallery-zoom__close" data-gallery-zoom-close aria-label="Close photo">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M6 6l12 12M18 6 6 18"/>
+        </svg>
+      </button>
+      <img class="gallery-zoom__image" data-gallery-zoom-image alt="" />
+    </dialog>
+
     <!-- Fixed on the right. Smaller icons on phones. URLs come from js/content.js. -->
     <nav class="social-rail" aria-label="Socials" data-social-rail hidden>
       <ul class="social-rail__list" data-social-rail-list></ul>
@@ -296,6 +348,7 @@
           <a href="#videos">Videos</a>
           <a href="#about">About</a>
           <a href="#updates">Updates</a>
+          <a href="#gallery">Gallery</a>
           <a href="#contact">Contact</a>
         </nav>
         <ul class="site-footer__socials" data-footer-socials hidden></ul>

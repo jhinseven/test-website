@@ -200,6 +200,38 @@ export const siteContent = {
     ],
   },
 
+  // ===== EDIT THIS: GALLERY =====
+  // Shown after Videos. Add photos in public/images/ and list them here.
+  // Mobile shows 1 at a time. Desktop shows 3, then the next 3, looping.
+  gallery: {
+    eyebrow: "Photos",
+    sectionTitle: "Gallery",
+    showAllLabel: "Show all",
+    overlayTitle: "All photos",
+    closeLabel: "Close",
+    prevLabel: "Previous photos",
+    nextLabel: "Next photos",
+    items: [
+      // Real photos. Keep the original files — the page shows small
+      // tiles in the grid and the full picture only when zoomed.
+      { src: "public/images/gallery1.jpg", alt: "Nini Uppuluri" },
+      { src: "public/images/gallery2.jpg", alt: "Nini Uppuluri" },
+      { src: "public/images/gallery4.jpg", alt: "Nini Uppuluri" },
+      { src: "public/images/gallery5.jpg", alt: "Nini Uppuluri" },
+      { src: "public/images/gallery6.jpg", alt: "Nini Uppuluri" },
+      { src: "public/images/gallery7.jpg", alt: "Nini Uppuluri" },
+      { src: "public/images/gallery8.jpg", alt: "Nini Uppuluri" },
+      { src: "public/images/gallery9.jpg", alt: "Nini Uppuluri" },
+      { src: "public/images/gallery10.jpg", alt: "Nini Uppuluri" },
+      { src: "public/images/gallery11.jpg", alt: "Nini Uppuluri" },
+      { src: "public/images/gallery12.jpg", alt: "Nini Uppuluri" },
+      { src: "public/images/gallery13.jpg", alt: "Nini Uppuluri" },
+      { src: "public/images/gallery14.jpg", alt: "Nini Uppuluri" },
+      { src: "public/images/gallery15.jpg", alt: "Nini Uppuluri" },
+      { src: "public/images/gallery16.jpg", alt: "Nini Uppuluri" },
+    ],
+  },
+
   // ===== EDIT THIS: LATEST UPDATES =====
   // Newest first. Keep it to 3 cards — the section shows at most 3.
   // Delete an item to show fewer. Delete all of them to hide the section.
@@ -239,7 +271,7 @@ export const siteContent = {
   // Both are public form values, not secrets, so they belong here.
   // Until formAction is filled in, the form shows a short "not connected" note.
   mailingList: {
-    hidden: true,
+    hidden: false,
     eyebrow: "Newsletter",
     title: "Join the mailing list",
     text: "Be first to hear about new songs, videos, and other stuff!",

@@ -1,8 +1,8 @@
 /**
  * Page startup
- * Fills the Hero, About, Music, Video, Shorts, Updates, Socials, Mailing List,
- * Contact, and Footer from js/content.js, and turns on the theme toggle
- * and mobile navigation.
+ * Fills the Hero, About, Music, Video, Shorts, Gallery, Updates, Socials,
+ * Mailing List, Contact, and Footer from js/content.js, and turns on the
+ * theme toggle and mobile navigation.
  */
 
 import { siteContent, links } from "./content.js";
@@ -834,6 +834,314 @@ function renderShorts() {
   section.hidden = false;
 }
 
+/**
+ * Gallery
+ * Mobile shows 1 photo, desktop shows 3. Next/previous wrap around.
+ * Photos swap with a fade-and-lift (not a slide). Show all opens a grid.
+ */
+function renderGallery() {
+  const gallery = siteContent.gallery;
+  const section = document.querySelector("#gallery");
+  if (!section) return;
+
+  const items = ((gallery && gallery.items) || []).filter(
+    (item) => item && !isPlaceholder(item.src)
+  );
+
+  if (!gallery || items.length === 0) {
+    section.hidden = true;
+    return;
+  }
+
+  const eyebrowEl = document.querySelector("[data-gallery-eyebrow]");
+  const titleEl = document.querySelector("[data-gallery-title]");
+  const viewport = document.querySelector("[data-gallery-viewport]");
+  const prevBtn = document.querySelector("[data-gallery-prev]");
+  const nextBtn = document.querySelector("[data-gallery-next]");
+  const showAllBtn = document.querySelector("[data-gallery-show-all]");
+  const overlay = document.querySelector("[data-gallery-overlay]");
+  const overlayTitle = document.querySelector("#gallery-overlay-title");
+  const overlayGrid = document.querySelector("[data-gallery-overlay-grid]");
+  const closeBtn = document.querySelector("[data-gallery-close]");
+  const zoom = document.querySelector("[data-gallery-zoom]");
+  const zoomImg = document.querySelector("[data-gallery-zoom-image]");
+  const zoomCloseBtn = document.querySelector("[data-gallery-zoom-close]");
+
+  if (eyebrowEl) eyebrowEl.textContent = gallery.eyebrow;
+  if (titleEl) titleEl.textContent = gallery.sectionTitle;
+  if (overlayTitle) overlayTitle.textContent = gallery.overlayTitle || "All photos";
+  if (prevBtn) prevBtn.setAttribute("aria-label", gallery.prevLabel || "Previous photos");
+  if (nextBtn) nextBtn.setAttribute("aria-label", gallery.nextLabel || "Next photos");
+  if (closeBtn) closeBtn.setAttribute("aria-label", gallery.closeLabel || "Close");
+  if (showAllBtn) showAllBtn.textContent = gallery.showAllLabel || "Show all";
+
+  const desktopQuery = window.matchMedia("(min-width: 800px)");
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  let index = 0;
+  let busy = false;
+  let suppressClick = false;
+  let savedScrollY = 0;
+  let pageSize = desktopQuery.matches ? Math.min(3, items.length) : 1;
+
+  function wrap(value) {
+    return ((value % items.length) + items.length) % items.length;
+  }
+
+  function stepSize() {
+    return items.length <= pageSize ? 1 : pageSize;
+  }
+
+  function visibleItems() {
+    return Array.from({ length: pageSize }, (_, offset) => items[wrap(index + offset)]);
+  }
+
+  function createCard(item, extraClass, itemIndex) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = extraClass ? `gallery__card ${extraClass}` : "gallery__card";
+    button.setAttribute("aria-label", `View ${item.alt || "photo"}`);
+
+    const img = document.createElement("img");
+    img.className = "gallery__image";
+    img.src = item.src;
+    img.alt = "";
+    img.decoding = "async";
+    img.loading = "eager";
+
+    button.append(img);
+    button.addEventListener("click", () => {
+      if (suppressClick) {
+        suppressClick = false;
+        return;
+      }
+      openZoom(itemIndex);
+    });
+    return button;
+  }
+
+  function paint(direction) {
+    if (!viewport) return;
+    viewport.style.setProperty("--gallery-cols", String(pageSize));
+    const incoming = direction ? "is-in" : "";
+    const rot = direction > 0 ? "-8deg" : "8deg";
+    viewport.replaceChildren(
+      ...visibleItems().map((item, offset) => {
+        const card = createCard(item, incoming, wrap(index + offset));
+        if (incoming) {
+          card.style.setProperty("--gallery-in-rot", rot);
+          card.style.transitionDelay = `${offset * 70}ms`;
+        }
+        return card;
+      })
+    );
+    viewport.setAttribute(
+      "aria-label",
+      `Photos ${index + 1} to ${wrap(index + pageSize - 1) + 1} of ${items.length}`
+    );
+
+    if (!incoming) return;
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        viewport.querySelectorAll(".gallery__card").forEach((card) => {
+          card.classList.remove("is-in");
+        });
+      });
+    });
+  }
+
+  function wait(ms) {
+    return new Promise((resolve) => window.setTimeout(resolve, ms));
+  }
+
+  async function go(direction) {
+    if (busy || !viewport || items.length < 2) return;
+    const nextIndex = wrap(index + direction * stepSize());
+    if (nextIndex === index) return;
+
+    busy = true;
+    const outgoing = [...viewport.querySelectorAll(".gallery__card")];
+    const animate = !reduceMotion.matches && outgoing.length > 0;
+    const outRot = direction > 0 ? "8deg" : "-8deg";
+
+    if (animate) {
+      outgoing.forEach((card, offset) => {
+        card.style.setProperty("--gallery-out-rot", outRot);
+        card.style.transitionDelay = `${offset * 70}ms`;
+        card.classList.add("is-out");
+      });
+      await wait(420 + Math.max(0, outgoing.length - 1) * 70);
+    }
+
+    index = nextIndex;
+    paint(animate ? direction : 0);
+    busy = false;
+  }
+
+  let overlayObserver = null;
+
+  function syncLightboxClass() {
+    document.documentElement.classList.toggle(
+      "is-lightbox-open",
+      Boolean((overlay && overlay.open) || (zoom && zoom.open))
+    );
+  }
+
+  function restoreScroll() {
+    window.scrollTo(0, savedScrollY);
+  }
+
+  function openOverlay() {
+    if (!overlay || !overlayGrid) return;
+    savedScrollY = window.scrollY;
+    overlayObserver?.disconnect();
+    overlayObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const img = entry.target.querySelector("img");
+          const src = img && img.getAttribute("data-src");
+          if (src) {
+            img.src = src;
+            img.removeAttribute("data-src");
+          }
+          overlayObserver.unobserve(entry.target);
+        });
+      },
+      { root: overlayGrid, rootMargin: "320px 0px", threshold: 0.01 }
+    );
+    overlayGrid.replaceChildren(
+      ...items.map((item, itemIndex) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "gallery-overlay__item";
+        button.setAttribute("aria-label", `View ${item.alt || "photo"}`);
+        const img = document.createElement("img");
+        img.alt = "";
+        img.decoding = "async";
+        if (itemIndex < 3) {
+          img.src = item.src;
+        } else {
+          img.setAttribute("data-src", item.src);
+        }
+        button.append(img);
+        button.addEventListener("click", () => openZoom(itemIndex));
+        if (itemIndex >= 3) overlayObserver.observe(button);
+        return button;
+      })
+    );
+    closeZoom();
+    if (typeof overlay.showModal === "function") overlay.showModal();
+    else overlay.setAttribute("open", "");
+    syncLightboxClass();
+    closeBtn?.focus({ preventScroll: true });
+    restoreScroll();
+    requestAnimationFrame(restoreScroll);
+  }
+
+  function isZoomOpen() {
+    return Boolean(zoom && (zoom.open || zoom.hasAttribute("open")));
+  }
+
+  function openZoom(itemIndex) {
+    const item = items[itemIndex];
+    if (!zoom || !zoomImg || !item) return;
+    const y = overlay?.open ? savedScrollY : window.scrollY;
+    zoomImg.src = item.src;
+    zoomImg.alt = item.alt || gallery.sectionTitle || "Gallery photo";
+    overlay?.classList.add("is-zoomed");
+    if (typeof zoom.showModal === "function") {
+      if (!zoom.open) zoom.showModal();
+    } else {
+      zoom.setAttribute("open", "");
+    }
+    zoomCloseBtn?.focus({ preventScroll: true });
+    window.scrollTo(0, y);
+    requestAnimationFrame(() => window.scrollTo(0, y));
+    syncLightboxClass();
+  }
+
+  function closeZoom() {
+    if (!zoom) return;
+    overlay?.classList.remove("is-zoomed");
+    if (typeof zoom.close === "function" && zoom.open) zoom.close();
+    else zoom.removeAttribute("open");
+    zoomImg?.removeAttribute("src");
+    syncLightboxClass();
+  }
+
+  function closeOverlay() {
+    if (!overlay) return;
+    closeZoom();
+    if (typeof overlay.close === "function" && overlay.open) overlay.close();
+    else overlay.removeAttribute("open");
+    overlayObserver?.disconnect();
+    restoreScroll();
+    showAllBtn?.focus({ preventScroll: true });
+    syncLightboxClass();
+  }
+
+  prevBtn?.addEventListener("click", () => go(-1));
+  nextBtn?.addEventListener("click", () => go(1));
+  showAllBtn?.addEventListener("click", openOverlay);
+  closeBtn?.addEventListener("click", closeOverlay);
+  zoomCloseBtn?.addEventListener("click", () => closeZoom());
+  overlay?.addEventListener("click", (event) => {
+    if (event.target === overlay) closeOverlay();
+  });
+  overlay?.addEventListener("cancel", (event) => {
+    event.preventDefault();
+    if (isZoomOpen()) closeZoom();
+    else closeOverlay();
+  });
+  zoom?.addEventListener("click", (event) => {
+    if (event.target === zoom) closeZoom();
+  });
+  zoom?.addEventListener("cancel", (event) => {
+    event.preventDefault();
+    closeZoom();
+  });
+
+  if (viewport) {
+    let startX = 0;
+    let tracking = false;
+    viewport.addEventListener(
+      "pointerdown",
+      (event) => {
+        if (event.pointerType === "mouse" && event.button !== 0) return;
+        tracking = true;
+        startX = event.clientX;
+      },
+      { passive: true }
+    );
+    viewport.addEventListener(
+      "pointerup",
+      (event) => {
+        if (!tracking) return;
+        tracking = false;
+        const delta = event.clientX - startX;
+        if (Math.abs(delta) < 48) return;
+        suppressClick = true;
+        go(delta < 0 ? 1 : -1);
+      },
+      { passive: true }
+    );
+    viewport.addEventListener("pointercancel", () => {
+      tracking = false;
+    });
+  }
+
+  desktopQuery.addEventListener("change", () => {
+    pageSize = desktopQuery.matches ? Math.min(3, items.length) : 1;
+    index = wrap(index);
+    paint(0);
+  });
+
+  paint(0);
+  if (prevBtn) prevBtn.hidden = items.length < 2;
+  if (nextBtn) nextBtn.hidden = items.length < 2;
+  section.hidden = false;
+}
+
 function createUpdateCard(update) {
   const article = document.createElement("article");
   article.className = "update";
@@ -1306,6 +1614,7 @@ renderAbout();
 renderMusic();
 renderVideos();
 renderShorts();
+renderGallery();
 renderUpdates();
 renderSocials();
 initSocialRail();
