@@ -8,6 +8,100 @@
 import { siteContent, links } from "./content.js";
 import { initTheme } from "./theme.js";
 
+const CUTOUT_FONTS = [
+  '"Playfair Display", "Times New Roman", Times, serif',
+  '"Libre Baskerville", Georgia, serif',
+  '"Times New Roman", Times, serif',
+  'Georgia, "Times New Roman", serif',
+];
+
+const CUTOUT_INKS = [
+  { bg: "var(--black)", fg: "#fff", ring: "transparent", family: "ink" },
+  { bg: "var(--black)", fg: "#fff", ring: "transparent", family: "ink" },
+  { bg: "var(--black)", fg: "#fff", ring: "transparent", family: "ink" },
+  { bg: "#fff", fg: "var(--black)", ring: "var(--black)", family: "paper" },
+  { bg: "#fff", fg: "var(--black)", ring: "var(--black)", family: "paper" },
+  { bg: "var(--pink)", fg: "var(--black)", ring: "transparent", family: "blush" },
+  { bg: "var(--art-red)", fg: "#fff", ring: "transparent", family: "wine" },
+];
+
+function cutoutHash(str) {
+  let h = 2166136261;
+  for (let i = 0; i < str.length; i += 1) {
+    h ^= str.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
+
+function cutoutRng(seed) {
+  let a = seed || 1;
+  return () => {
+    a = (Math.imul(a, 1664525) + 1013904223) >>> 0;
+    return a / 4294967296;
+  };
+}
+
+function cutoutPick(rng, list) {
+  return list[Math.floor(rng() * list.length)];
+}
+
+function renderCutoutTitle(el, text) {
+  if (!el) return;
+  const value = String(text || "").trim();
+  el.classList.add("cutout-title");
+  el.setAttribute("aria-label", value);
+
+  const nodes = [];
+  let i = 0;
+  let prevFamily = "";
+  let prevLower = false;
+  value.split(/\s+/).forEach((word, index, words) => {
+    const wordEl = document.createElement("span");
+    wordEl.className = "cutout-word";
+    wordEl.setAttribute("aria-hidden", "true");
+    Array.from(word).forEach((char, charIndex) => {
+      const rng = cutoutRng(cutoutHash(`${value}#${i}:${char}`));
+      let ink = cutoutPick(rng, CUTOUT_INKS);
+      if (ink.family === prevFamily) ink = cutoutPick(rng, CUTOUT_INKS);
+      if (ink.family === prevFamily) ink = cutoutPick(rng, CUTOUT_INKS);
+      prevFamily = ink.family;
+
+      let glyph = char;
+      let isLower = false;
+      if (/[a-z]/i.test(char)) {
+        isLower = charIndex > 0 && !prevLower && rng() < 0.14;
+        glyph = isLower ? char.toLowerCase() : char.toUpperCase();
+      }
+      prevLower = isLower;
+
+      const letter = document.createElement("span");
+      letter.className = "cutout-letter";
+      letter.textContent = glyph;
+      letter.style.setProperty("--cutout-font", cutoutPick(rng, CUTOUT_FONTS));
+      letter.style.setProperty("--cutout-weight", cutoutPick(rng, ["400", "400", "700", "900", "900"]));
+      letter.style.setProperty("--cutout-style", rng() < 0.32 ? "italic" : "normal");
+      letter.style.setProperty("--cutout-size", `${(0.72 + rng() * 0.58).toFixed(3)}em`);
+      letter.style.setProperty("--cutout-tilt", `${((rng() - 0.5) * 20).toFixed(2)}deg`);
+      letter.style.setProperty("--cutout-shift", `${((rng() - 0.5) * 0.38).toFixed(3)}em`);
+      letter.style.setProperty("--cutout-pad-x", `${(0.08 + rng() * 0.18).toFixed(3)}em`);
+      letter.style.setProperty("--cutout-pad-y", `${(0.08 + rng() * 0.16).toFixed(3)}em`);
+      letter.style.setProperty("--cutout-squash", (0.84 + rng() * 0.3).toFixed(3));
+      letter.style.setProperty("--cutout-gap", `${(rng() * 0.07 - 0.015).toFixed(3)}em`);
+      letter.style.setProperty("--cutout-bg", ink.bg);
+      letter.style.setProperty("--cutout-fg", ink.fg);
+      letter.style.setProperty("--cutout-ring", ink.ring);
+      wordEl.append(letter);
+      i += 1;
+    });
+    nodes.push(wordEl);
+    if (index < words.length - 1) {
+      nodes.push(document.createTextNode(" "));
+    }
+  });
+  el.replaceChildren(...nodes);
+}
+
 function renderHero() {
   const { hero, siteName, seoDescription } = siteContent;
 
@@ -23,18 +117,7 @@ function renderHero() {
   const visualEl = document.querySelector("[data-hero-visual]");
   const placeholderEl = document.querySelector("[data-hero-placeholder]");
 
-  if (titleEl) {
-    // Each word is its own span so the first letter of Nini and Uppuluri
-    // can both pick up the pink accent.
-    titleEl.replaceChildren(
-      ...hero.title.split(/\s+/).flatMap((word, index, words) => {
-        const span = document.createElement("span");
-        span.className = "hero__name-word";
-        span.textContent = word;
-        return index < words.length - 1 ? [span, document.createTextNode(" ")] : [span];
-      })
-    );
-  }
+  if (titleEl) renderCutoutTitle(titleEl, hero.title);
   if (taglineEl) taglineEl.textContent = hero.tagline;
 
   if (promoEl) {
@@ -42,7 +125,13 @@ function renderHero() {
     const hasPromo = promo.label && !isPlaceholder(promo.href);
     promoEl.hidden = !hasPromo;
     if (hasPromo) {
-      promoEl.textContent = promo.label;
+      const labelEl = promoEl.querySelector("[data-hero-promo-label]");
+      if (labelEl) {
+        labelEl.textContent = promo.label;
+        labelEl.setAttribute("data-hero-promo-label", promo.label);
+      } else {
+        promoEl.textContent = promo.label;
+      }
       promoEl.setAttribute("href", promo.href);
       if (/^https?:\/\//i.test(promo.href)) {
         promoEl.target = "_blank";
@@ -302,6 +391,67 @@ function attachSpotifyController(host, embedUrl, featured) {
   });
 }
 
+function createMusicBanner(banner) {
+  if (!banner || isPlaceholder(banner.href) || isPlaceholder(banner.artwork)) {
+    return null;
+  }
+
+  const link = document.createElement("a");
+  link.className = "music-banner";
+  link.href = banner.href;
+  link.setAttribute(
+    "aria-label",
+    banner.title ? `Pre-save ${banner.title}` : banner.label || "Pre-save"
+  );
+  if (/^https?:\/\//i.test(banner.href)) {
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+  }
+
+  const art = document.createElement("img");
+  art.className = "music-banner__art";
+  art.src = banner.artwork;
+  art.alt = banner.artworkAlt || banner.title || "";
+
+  const panel = document.createElement("span");
+  panel.className = "music-banner__panel";
+
+  const wash = document.createElement("img");
+  wash.className = "music-banner__wash";
+  wash.src = banner.artwork;
+  wash.alt = "";
+  wash.setAttribute("aria-hidden", "true");
+
+  const promo = document.createElement("span");
+  promo.className = "music-banner__promo";
+
+  for (let i = 1; i <= 5; i += 1) {
+    const sparkle = document.createElement("span");
+    sparkle.className = `hero__promo-sparkle hero__promo-sparkle--${i}`;
+    sparkle.setAttribute("aria-hidden", "true");
+    promo.appendChild(sparkle);
+  }
+
+  const pointer = document.createElement("span");
+  pointer.className = "hero__promo-pointer";
+  pointer.setAttribute("aria-hidden", "true");
+  const cursor = document.createElement("img");
+  cursor.src = "public/images/y2k-cursor.png";
+  cursor.alt = "";
+  pointer.appendChild(cursor);
+  promo.appendChild(pointer);
+
+  const label = document.createElement("span");
+  label.className = "hero__promo-label";
+  label.textContent = banner.label || "Pre-save now!";
+  label.setAttribute("data-hero-promo-label", banner.label || "Pre-save now!");
+  promo.appendChild(label);
+
+  panel.append(wash, promo);
+  link.append(art, panel);
+  return link;
+}
+
 function createTrackCard(track, featured = false) {
   const article = document.createElement("article");
   article.className = featured ? "track track--featured" : "track";
@@ -345,12 +495,23 @@ function renderMusic() {
   if (!music) return;
 
   const titleEl = document.querySelector("[data-music-title]");
+  const bannerEl = document.querySelector("[data-music-banner]");
   const featuredEl = document.querySelector("[data-music-featured]");
   const gridEl = document.querySelector("[data-music-grid]");
   const extraEl = document.querySelector("[data-music-extra]");
   const viewAllEl = document.querySelector("[data-music-view-all]");
 
-  if (titleEl) titleEl.textContent = music.sectionTitle;
+  if (titleEl) renderCutoutTitle(titleEl, music.sectionTitle);
+  if (bannerEl) {
+    const banner = createMusicBanner(music.banner);
+    if (banner) {
+      bannerEl.replaceChildren(banner);
+      bannerEl.hidden = false;
+    } else {
+      bannerEl.replaceChildren();
+      bannerEl.hidden = true;
+    }
+  }
   if (featuredEl && music.featured) {
     featuredEl.replaceChildren(createTrackCard(music.featured, true));
   }
@@ -532,19 +693,47 @@ function createYouTubeIframe(embedUrl, title) {
   return iframe;
 }
 
-function setYouTubeThumb(img, videoId, vertical) {
+function youtubeThumbChoice(thumbnailUrl) {
+  if (!thumbnailUrl) return "";
+  try {
+    const file = new URL(thumbnailUrl).pathname.split("/").pop() || "";
+    const numbered = file.match(/^(?:hq|mq|sd|maxres|oar)(\d)\./i);
+    if (numbered) return numbered[1];
+    if (/default/i.test(file)) return "default";
+  } catch {
+    return "";
+  }
+  return "";
+}
+
+function setYouTubeThumb(img, videoId, vertical, choice = "") {
+  const file = (name) => `https://i.ytimg.com/vi/${videoId}/${name}`;
+  const preferred = [];
+  if (vertical && choice && choice !== "default") {
+    preferred.push(file(`oar${choice}.jpg`), file(`maxres${choice}.jpg`), file(`hq${choice}.jpg`));
+  }
   const verticalCovers = [
-    `https://i.ytimg.com/vi/${videoId}/oardefault.jpg`,
-    `https://i.ytimg.com/vi/${videoId}/oar2.jpg`,
-    `https://i.ytimg.com/vi/${videoId}/oar1.jpg`,
-    `https://i.ytimg.com/vi/${videoId}/oar3.jpg`,
+    file("oardefault.jpg"),
+    file("oar2.jpg"),
+    file("oar1.jpg"),
+    file("oar3.jpg"),
   ];
   const landscape = [
-    `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`,
-    `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
-    `https://i.ytimg.com/vi/${videoId}/sddefault.jpg`,
+    file("maxresdefault.jpg"),
+    file("hqdefault.jpg"),
+    file("sddefault.jpg"),
   ];
-  const queue = vertical ? [...verticalCovers, ...landscape] : landscape;
+  const seen = new Set();
+  const queue = [];
+  const add = (url) => {
+    if (url && !seen.has(url)) {
+      seen.add(url);
+      queue.push(url);
+    }
+  };
+  preferred.forEach(add);
+  if (vertical) verticalCovers.forEach(add);
+  landscape.forEach(add);
 
   const tryAt = (index) => {
     if (index >= queue.length) return;
@@ -552,9 +741,9 @@ function setYouTubeThumb(img, videoId, vertical) {
     const onLoad = () => {
       cleanup();
       const dummy = img.naturalWidth <= 120;
-      const wantTall = vertical && index < verticalCovers.length;
       const isTall = img.naturalHeight > img.naturalWidth;
-      if (dummy || (wantTall && !isTall)) tryAt(index + 1);
+      const requireTall = vertical && /\/oar/i.test(queue[index] || "");
+      if (dummy || (requireTall && !isTall)) tryAt(index + 1);
     };
 
     const onError = () => {
@@ -603,7 +792,13 @@ function attachYouTubePoster(media, video, vertical = false) {
   img.referrerPolicy = "no-referrer";
   img.loading = vertical ? "eager" : "lazy";
   if (isPlaceholder(video.thumbnail)) {
-    setYouTubeThumb(img, videoId, vertical);
+    if (vertical) {
+      fetchYouTubeOembed(video.videoUrl).then((data) => {
+        setYouTubeThumb(img, videoId, true, youtubeThumbChoice(data && data.thumbnail_url));
+      });
+    } else {
+      setYouTubeThumb(img, videoId, false);
+    }
   } else {
     img.src = video.thumbnail;
   }
@@ -660,7 +855,7 @@ function renderVideos() {
   const extraEl = document.querySelector("[data-videos-extra]");
   const viewAllEl = document.querySelector("[data-videos-view-all]");
 
-  if (titleEl) titleEl.textContent = videos.sectionTitle;
+  if (titleEl) renderCutoutTitle(titleEl, videos.sectionTitle);
   if (featuredEl && videos.featured) {
     featuredEl.replaceChildren(createVideoCard(videos.featured, true));
   }
@@ -711,7 +906,7 @@ function normalizeShort(item) {
   };
 }
 
-const youtubeTitleCache = new Map();
+const youtubeOembedCache = new Map();
 
 function fetchYouTubeOembedJsonp(jsonUrl) {
   return new Promise((resolve, reject) => {
@@ -746,25 +941,52 @@ function fetchYouTubeOembedJsonp(jsonUrl) {
   });
 }
 
-function fetchYouTubeTitle(videoUrl) {
+function fetchYouTubeOembed(videoUrl) {
   const id = toYouTubeId(videoUrl);
-  if (!id) return Promise.resolve("");
-  if (youtubeTitleCache.has(id)) return youtubeTitleCache.get(id);
+  if (!id) return Promise.resolve(null);
+  if (youtubeOembedCache.has(id)) return youtubeOembedCache.get(id);
 
-  const watchUrl = `https://www.youtube.com/watch?v=${id}`;
-  const jsonUrl = `https://www.youtube.com/oembed?format=json&url=${encodeURIComponent(watchUrl)}`;
+  const pageUrls = [];
+  const addPage = (url) => {
+    if (url && !pageUrls.includes(url)) pageUrls.push(url);
+  };
+  addPage(`https://www.youtube.com/shorts/${id}`);
+  addPage(videoUrl);
+  addPage(`https://www.youtube.com/watch?v=${id}`);
 
-  const request = fetch(jsonUrl)
-    .then((response) => {
-      if (!response.ok) throw new Error("oembed");
-      return response.json();
-    })
-    .catch(() => fetchYouTubeOembedJsonp(jsonUrl))
-    .then((data) => (data && data.title) || "")
-    .catch(() => "");
+  const requestOne = (pageUrl) => {
+    const jsonUrl = `https://www.youtube.com/oembed?format=json&url=${encodeURIComponent(pageUrl)}`;
+    return fetch(jsonUrl)
+      .then((response) => {
+        if (!response.ok) throw new Error("oembed");
+        return response.json();
+      })
+      .catch(() => fetchYouTubeOembedJsonp(jsonUrl));
+  };
 
-  youtubeTitleCache.set(id, request);
+  const request = (async () => {
+    let best = null;
+    for (const pageUrl of pageUrls) {
+      try {
+        const data = await requestOne(pageUrl);
+        if (!data) continue;
+        if (!best) best = data;
+        else best = { ...best, ...data };
+        const choice = youtubeThumbChoice(data.thumbnail_url);
+        if (choice && choice !== "default") return best;
+      } catch {
+        // Try the next URL shape (shorts vs watch).
+      }
+    }
+    return best;
+  })();
+
+  youtubeOembedCache.set(id, request);
   return request;
+}
+
+function fetchYouTubeTitle(videoUrl) {
+  return fetchYouTubeOembed(videoUrl).then((data) => (data && data.title) || "");
 }
 
 function createShortCard(short) {
@@ -868,7 +1090,7 @@ function renderGallery() {
   const zoomCloseBtn = document.querySelector("[data-gallery-zoom-close]");
 
   if (eyebrowEl) eyebrowEl.textContent = gallery.eyebrow;
-  if (titleEl) titleEl.textContent = gallery.sectionTitle;
+  if (titleEl) renderCutoutTitle(titleEl, gallery.sectionTitle);
   if (overlayTitle) overlayTitle.textContent = gallery.overlayTitle || "All photos";
   if (prevBtn) prevBtn.setAttribute("aria-label", gallery.prevLabel || "Previous photos");
   if (nextBtn) nextBtn.setAttribute("aria-label", gallery.nextLabel || "Next photos");
@@ -1194,7 +1416,7 @@ function renderUpdates() {
   const gridEl = document.querySelector("[data-updates-grid]");
 
   if (eyebrowEl) eyebrowEl.textContent = updates.eyebrow;
-  if (titleEl) titleEl.textContent = updates.sectionTitle;
+  if (titleEl) renderCutoutTitle(titleEl, updates.sectionTitle);
   if (gridEl) {
     gridEl.replaceChildren(...items.slice(0, 3).map(createUpdateCard));
     gridEl.dataset.count = String(Math.min(items.length, 3));
@@ -1359,7 +1581,7 @@ function renderMailingList() {
   const honeypotEl = document.querySelector("[data-mailing-honeypot]");
 
   if (eyebrowEl) eyebrowEl.textContent = mailing.eyebrow;
-  if (titleEl) titleEl.textContent = mailing.title;
+  if (titleEl) renderCutoutTitle(titleEl, mailing.title);
   if (textEl) textEl.textContent = mailing.text;
   if (labelEl) labelEl.textContent = mailing.emailLabel;
   if (buttonEl) buttonEl.textContent = mailing.buttonLabel;
@@ -1449,7 +1671,6 @@ function renderContact() {
 
   const text = {
     "[data-contact-eyebrow]": contact.eyebrow,
-    "[data-contact-title]": contact.title,
     "[data-contact-name-label]": contact.nameLabel,
     "[data-contact-email-label]": contact.emailLabel,
     "[data-contact-message-label]": contact.messageLabel,
@@ -1459,6 +1680,8 @@ function renderContact() {
     const el = document.querySelector(selector);
     if (el && value) el.textContent = value;
   });
+
+  renderCutoutTitle(document.querySelector("[data-contact-title]"), contact.title);
 
   const introEl = document.querySelector("[data-contact-text]");
   if (introEl) {

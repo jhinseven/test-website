@@ -1,0 +1,113 @@
+/* ===== LOOK / AESTHETIC (edit this file for visual updates) =====
+   Words and links stay in js/content.js.
+   Sticker drawings stay in index.html (search for "stickers").
+   If you change Google Fonts in index.html, update --font-* here too.
+
+   Typical updates:
+   1. Page colors  -> LIGHT / DARK sections below
+   2. Pink accent  -> --pink (one color for buttons, titles, stickers, headers)
+   3. Circle glows -> --page-glow in LIGHT / DARK
+   4. Title look   -> cutout letters (hero + section titles) / TITLE LOOK (About script)
+   5. Sticker spots -> STICKER PLACEMENT
+*/
+
+:root {
+  --pink: #d089a0;
+  --pink-heading: var(--pink);
+  --pink-soft: color-mix(in srgb, var(--pink) 16%, transparent);
+  --black: #141413;
+  --white: #eeebe6;
+  --art-burgundy: #5c2d3a;
+  --art-red: #7a3344;
+  --font-display: "Lilita One", "Outfit", system-ui, sans-serif;
+  --font-script: "Pacifico", "Lilita One", cursive;
+  --font-cutout: "Playfair Display", "Times New Roman", Times, serif;
+  --font-body: "Outfit", system-ui, sans-serif;
+  --scroll-thumb: #8a8680;
+  --scroll-thumb-hover: #6e6b64;
+
+  /* Title look: pink star + outlined script (the "Dream" badge). */
+  --title-fill: #111;
+  --title-stroke: #fff;
+  --title-rotate: -8deg;
+  --title-star-size: 3.2em;
+  --title-star-size-mobile: 2.85em;
+  --title-star-rotate: 8deg;
+  --title-star-color: var(--pink);
+}
+
+/* ===== LIGHT =====
+   Near white, with soft circle glows pinned to the viewport
+   (the same “imaginary orbs” idea as the old black-and-pink site).
+*/
+html[data-theme="light"] {
+  --bg: #fcfbf9;
+  --bg-elevated: #ffffff;
+  --text: #1a1917;
+  --text-muted: rgba(26, 25, 23, 0.62);
+  --border: rgba(40, 38, 34, 0.14);
+  --cta-bg: var(--pink);
+  --cta-text: var(--black);
+  --cta-ghost-border: rgba(40, 38, 34, 0.28);
+  --wash: rgba(70, 68, 62, 0.06);
+  --wash-strong: rgba(70, 68, 62, 0.1);
+  --page-glow:
+    radial-gradient(circle at 88% 4%, color-mix(in srgb, var(--pink) 22%, transparent), transparent 36%),
+    radial-gradient(circle at 8% 86%, color-mix(in srgb, var(--pink) 16%, transparent), transparent 40%),
+    radial-gradient(circle at 96% 78%, rgba(80, 76, 70, 0.08), transparent 34%);
+  --hero-visual:
+    radial-gradient(circle at 30% 20%, color-mix(in srgb, var(--pink) 18%, transparent), transparent 46%),
+    linear-gradient(160deg, #fff, #faf8f6 60%, #f0eeea);
+}
+
+/* ===== DARK =====
+   Charcoal + a little burgundy, with the same soft circle glows.
+*/
+html[data-theme="dark"] {
+  --bg: #171716;
+  --bg-elevated: #232321;
+  --text: var(--white);
+  --text-muted: rgba(238, 235, 230, 0.68);
+  --border: rgba(196, 192, 184, 0.16);
+  --cta-bg: var(--pink);
+  --cta-text: var(--black);
+  --cta-ghost-border: rgba(196, 192, 184, 0.34);
+  --wash: rgba(72, 70, 64, 0.22);
+  --wash-strong: color-mix(in srgb, var(--art-burgundy) 22%, transparent);
+  --page-glow:
+    radial-gradient(circle at 88% 4%, color-mix(in srgb, var(--art-burgundy) 34%, transparent), transparent 36%),
+    radial-gradient(circle at 8% 86%, color-mix(in srgb, var(--pink) 18%, transparent), transparent 40%),
+    radial-gradient(circle at 96% 78%, rgba(72, 70, 64, 0.28), transparent 34%);
+  --hero-visual:
+    radial-gradient(circle at 30% 20%, rgba(92, 45, 58, 0.38), transparent 46%),
+    linear-gradient(160deg, #2a2a28, #161615 55%, #3a2428);
+}
+
+/* ===== STICKER PLACEMENT
+   Drawings: index.html. These rules only move / size them.
+   Left stickers use left + top. Right stickers use right + top
+   so they sit beside the social icons, not on the page center.
+*/
+.sticker--1 { width: 4.1rem; left: 1.6%; top: 14%; transform: rotate(-18deg); }
+.sticker--2 { width: 2.7rem; right: 6.4rem; top: 12%; transform: rotate(16deg); }
+.sticker--3 { width: 3.1rem; left: 5.8%; top: 36%; transform: rotate(-12deg); }
+.sticker--4 { width: 3.4rem; right: 6.8rem; top: 28%; transform: rotate(14deg); }
+.sticker--5 { width: 3.6rem; left: 2.2%; top: 58%; transform: rotate(10deg); }
+.sticker--6 { width: 3.3rem; right: 7.2rem; top: 54%; transform: rotate(-8deg); }
+.sticker--7 { width: 2.8rem; left: 7.4%; top: 76%; transform: rotate(-20deg); }
+.sticker--8 { width: 3.2rem; right: 5.4rem; top: 74%; transform: rotate(12deg); }
+.sticker--9 { width: 2.3rem; left: 3.4%; top: 88%; transform: rotate(22deg); }
+.sticker--10 { width: 2.15rem; right: 8.6rem; top: 88%; transform: rotate(-14deg); }
+
+@media (max-width: 799px) {
+  .sticker--1 { width: 2.4rem; left: -0.35rem; top: 14%; }
+  .sticker--2 { width: 1.8rem; right: -0.2rem; top: 18%; }
+  .sticker--3 { width: 2.1rem; left: -0.45rem; top: 42%; }
+  .sticker--4 { width: 2.2rem; right: -0.3rem; top: 46%; }
+  .sticker--5 { width: 2.3rem; left: -0.2rem; top: 72%; }
+  .sticker--6 { width: 2.1rem; right: -0.25rem; top: 76%; }
+  .sticker--7,
+  .sticker--8,
+  .sticker--9,
+  .sticker--10 { display: none; }
+}

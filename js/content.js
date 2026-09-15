@@ -2,6 +2,9 @@
  * ===== SITE CONTENT (edit this file most often) =====
  * Frequently changed text, images, and links live here so you do not
  * have to hunt through HTML/CSS. Search this file for EDIT THIS.
+ *
+ * Look / colors / fonts / sticker spots / titles: css/theme.css
+ * Sticker drawings: index.html (search for "stickers")
  */
 
 export const siteContent = {
@@ -18,8 +21,8 @@ export const siteContent = {
     // Shown under the tagline. Change the label and href when the featured
     // song changes. Leave the href as a placeholder to hide the line.
     promo: {
-      label: "Stream Pretty Wings Now!",
-      href: "https://open.spotify.com/track/5tR2w78xV17M5q1nea5zyw",
+      label: "Pre-save now!",
+      href: "https://distrokid.com/hyperfollow/niniuppuluri/believe-2?ref=release",
     },
     // ===== EDIT THIS: NINI HERO IMAGE =====
     // Replace the placeholder below with the final image path, e.g. "/public/images/nini-hero.jpg"
@@ -55,7 +58,7 @@ export const siteContent = {
     readLessLabel: "Show less",
     // ===== EDIT THIS: ABOUT IMAGE =====
     // Put the photo in public/images/ and use a path like "public/images/nini-about.jpg"
-    image: "public/images/nini-about.png",
+    image: "public/images/gallery4.jpg",
     imageAlt: "Nini Uppuluri",
     // Optional button. Leave the placeholder to hide it, or point it at a page/link.
     learnMore: {
@@ -70,10 +73,18 @@ export const siteContent = {
   // Use a Spotify track or album URL (or an embed URL).
   // Example: "https://open.spotify.com/embed/track/REPLACE_WITH_TRACK_ID"
   music: {
-    sectionTitle: "Featured Music",
+    sectionTitle: "Music",
     viewAllLabel: "View All Music",
     // If this is still a placeholder, the button will reveal extra songs below (if you add them).
     viewAllHref: "https://open.spotify.com/artist/13XNrE7VNUoipQC30YNyHA",
+    // Shown above Pretty Wings. Leave the href as a placeholder to hide it.
+    banner: {
+      title: "Believe",
+      artwork: "public/images/nini-hero.jpg",
+      artworkAlt: "Believe — Nini Uppuluri",
+      label: "Pre-save now!",
+      href: "https://distrokid.com/hyperfollow/niniuppuluri/believe-2?ref=release",
+    },
     featured: {
       title: "Pretty Wings",
       artist: "Nini Uppuluri",
@@ -127,7 +138,7 @@ export const siteContent = {
   // Paste a normal YouTube watch URL or an embed URL.
   // Example: "https://www.youtube.com/watch?v=REPLACE_WITH_VIDEO_ID"
   videos: {
-    sectionTitle: "Featured Video",
+    sectionTitle: "Videos",
     viewAllLabel: "View All Videos",
     viewAllHref: "[REPLACE_WITH_YOUTUBE_URL]",
     featured: {
@@ -193,10 +204,10 @@ export const siteContent = {
     viewAllLabel: "Watch more Shorts",
     viewAllHref: "https://www.youtube.com/channel/UC96TGOrWeIWxr6noks2ipzw/shorts",
     items: [
-      "https://youtube.com/shorts/2ysdlf5PO_U?si=o0DiZhBOjpZlV-4e",
-      "https://youtube.com/shorts/DA4ak02m9Ms?si=Y8CMx9J4eC6fTe9F",
-      "https://youtube.com/shorts/aVj_Qbfqsvc?si=rfg8qYxQC4Z92BNH",
-      "https://youtube.com/shorts/2FbRVIU5f58?si=pralNFL30ZgX9wkB",
+      "https://youtube.com/shorts/yqPfGaaWG60?si=OS5ViC2e1DvqXKK7",
+      "https://youtube.com/shorts/DbO1qAgBj_Q?si=HBeOkyZcz79ITFJ2",
+      "https://youtu.be/djrM2wf8yyk?t=4",
+      "https://youtu.be/LWDWeDdyBko",
     ],
   },
 
@@ -216,18 +227,18 @@ export const siteContent = {
       // tiles in the grid and the full picture only when zoomed.
       { src: "public/images/gallery1.jpg", alt: "Nini Uppuluri" },
       { src: "public/images/gallery2.jpg", alt: "Nini Uppuluri" },
-      { src: "public/images/gallery4.jpg", alt: "Nini Uppuluri" },
+      { src: "public/images/gallery8.jpg", alt: "Nini Uppuluri" },
       { src: "public/images/gallery5.jpg", alt: "Nini Uppuluri" },
       { src: "public/images/gallery6.jpg", alt: "Nini Uppuluri" },
       { src: "public/images/gallery7.jpg", alt: "Nini Uppuluri" },
-      { src: "public/images/gallery8.jpg", alt: "Nini Uppuluri" },
+      { src: "public/images/gallery4.jpg", alt: "Nini Uppuluri" },
       { src: "public/images/gallery9.jpg", alt: "Nini Uppuluri" },
       { src: "public/images/gallery10.jpg", alt: "Nini Uppuluri" },
       { src: "public/images/gallery11.jpg", alt: "Nini Uppuluri" },
-      { src: "public/images/gallery12.jpg", alt: "Nini Uppuluri" },
+      { src: "public/images/gallery15.jpg", alt: "Nini Uppuluri" },
       { src: "public/images/gallery13.jpg", alt: "Nini Uppuluri" },
       { src: "public/images/gallery14.jpg", alt: "Nini Uppuluri" },
-      { src: "public/images/gallery15.jpg", alt: "Nini Uppuluri" },
+      { src: "public/images/gallery12.jpg", alt: "Nini Uppuluri" },
       { src: "public/images/gallery16.jpg", alt: "Nini Uppuluri" },
     ],
   },
@@ -273,7 +284,7 @@ export const siteContent = {
   mailingList: {
     hidden: false,
     eyebrow: "Newsletter",
-    title: "Join the mailing list",
+    title: "Mailing List",
     text: "Be first to hear about new songs, videos, and other stuff!",
     emailLabel: "Email address",
     emailPlaceholder: "you@example.com",
@@ -292,8 +303,8 @@ export const siteContent = {
   // Until it is filled in, the form is disabled and the email below is shown
   // instead. The email address itself is edited once, in `socials` above.
   contact: {
-    eyebrow: "Contact",
-    title: "Business Enquiries",
+    eyebrow: "Business Enquiries",
+    title: "Contact",
     text: "For collaborations and other business enquiries only.",
     nameLabel: "Your name",
     namePlaceholder: "First and last name",
