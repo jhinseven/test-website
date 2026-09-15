@@ -263,11 +263,14 @@ function renderAbout() {
   }
 
   if (ctaEl) {
-    const learnMore = about.learnMore || {};
-    ctaEl.textContent = learnMore.label || "Learn More";
-    // Hide the button until a real link exists, so it never points nowhere.
-    ctaEl.hidden = isPlaceholder(learnMore.href);
-    if (!ctaEl.hidden) ctaEl.setAttribute("href", learnMore.href);
+    const linktree = about.linktree || {};
+    ctaEl.textContent = linktree.label || "my linktree";
+    ctaEl.hidden = isPlaceholder(linktree.href);
+    if (!ctaEl.hidden) {
+      ctaEl.setAttribute("href", linktree.href);
+      ctaEl.setAttribute("target", "_blank");
+      ctaEl.setAttribute("rel", "noopener noreferrer");
+    }
   }
 }
 

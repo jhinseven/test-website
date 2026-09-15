@@ -59,10 +59,11 @@ export const siteContent = {
     // Put the photo in public/images/ and use a path like "public/images/nini-about.jpg"
     image: "public/images/gallery4.jpg",
     imageAlt: "Nini Uppuluri",
-    // Optional button. Leave the placeholder to hide it, or point it at a page/link.
-    learnMore: {
-      label: "Learn More",
-      href: "[REPLACE_WITH_LEARN_MORE_URL]",
+    // ===== EDIT THIS: ABOUT LINKTREE =====
+    // Cute button under the About copy. Leave the href as a placeholder to hide it.
+    linktree: {
+      label: "My Linktree",
+      href: "https://linktr.ee/niniuppuluri",
     },
   },
 
