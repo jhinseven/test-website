@@ -709,15 +709,15 @@ function youtubeThumbChoice(thumbnailUrl) {
 function setYouTubeThumb(img, videoId, vertical, choice = "") {
   const file = (name) => `https://i.ytimg.com/vi/${videoId}/${name}`;
   const preferred = [];
-  if (vertical && choice && choice !== "default") {
-    preferred.push(file(`oar${choice}.jpg`), file(`maxres${choice}.jpg`), file(`hq${choice}.jpg`));
+  if (vertical) {
+    // YouTube's current Shorts cover is sardefault (custom 9:16).
+    // Older Shorts use oardefault. oEmbed hq2 maps to an auto frame (oar2).
+    preferred.push(file("sardefault.jpg"), file("oardefault.jpg"));
+    if (choice && choice !== "default") {
+      preferred.push(file(`oar${choice}.jpg`));
+    }
+    preferred.push(file("oar2.jpg"), file("oar1.jpg"), file("oar3.jpg"));
   }
-  const verticalCovers = [
-    file("oardefault.jpg"),
-    file("oar2.jpg"),
-    file("oar1.jpg"),
-    file("oar3.jpg"),
-  ];
   const landscape = [
     file("maxresdefault.jpg"),
     file("hqdefault.jpg"),
@@ -732,7 +732,6 @@ function setYouTubeThumb(img, videoId, vertical, choice = "") {
     }
   };
   preferred.forEach(add);
-  if (vertical) verticalCovers.forEach(add);
   landscape.forEach(add);
 
   const tryAt = (index) => {
@@ -742,7 +741,7 @@ function setYouTubeThumb(img, videoId, vertical, choice = "") {
       cleanup();
       const dummy = img.naturalWidth <= 120;
       const isTall = img.naturalHeight > img.naturalWidth;
-      const requireTall = vertical && /\/oar/i.test(queue[index] || "");
+      const requireTall = vertical && /\/(?:oar|sar)/i.test(queue[index] || "");
       if (dummy || (requireTall && !isTall)) tryAt(index + 1);
     };
 
@@ -792,13 +791,7 @@ function attachYouTubePoster(media, video, vertical = false) {
   img.referrerPolicy = "no-referrer";
   img.loading = vertical ? "eager" : "lazy";
   if (isPlaceholder(video.thumbnail)) {
-    if (vertical) {
-      fetchYouTubeOembed(video.videoUrl).then((data) => {
-        setYouTubeThumb(img, videoId, true, youtubeThumbChoice(data && data.thumbnail_url));
-      });
-    } else {
-      setYouTubeThumb(img, videoId, false);
-    }
+    setYouTubeThumb(img, videoId, vertical);
   } else {
     img.src = video.thumbnail;
   }
@@ -1780,7 +1773,7 @@ function renderFooter() {
   const extrasEl = document.querySelector("[data-footer-extras]");
   const topEl = document.querySelector("[data-footer-top]");
 
-  if (nameEl) nameEl.textContent = footer.name || "Nini";
+  if (nameEl) nameEl.textContent = footer.name || "xoxo,\nNini Uppuluri :)";
   if (topEl) topEl.textContent = footer.backToTop || "Back to top";
 
   if (copyEl) {

@@ -3,8 +3,7 @@
  * Frequently changed text, images, and links live here so you do not
  * have to hunt through HTML/CSS. Search this file for EDIT THIS.
  *
- * Look / colors / fonts / sticker spots / titles: css/theme.css
- * Sticker drawings: index.html (search for "stickers")
+ * Look / colors / fonts / titles: css/theme.css
  */
 
 export const siteContent = {
@@ -325,7 +324,7 @@ export const siteContent = {
   // object at the bottom of this file — a platform with a placeholder URL
   // is skipped, so nothing in the footer links nowhere.
   footer: {
-    name: "Nini",
+    name: "xoxo,\nNini Uppuluri :)",
     copyright: "All rights reserved.",
     backToTop: "Back to top",
     // Optional extra links (privacy, credits, etc.). Leave empty to hide.

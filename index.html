@@ -28,7 +28,7 @@
       href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400;1,700&family=Lilita+One&family=Outfit:wght@300;400;500;600&family=Pacifico&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&display=swap"
       rel="stylesheet"
     />
-    <!-- Look / colors / sticker spots / titles: css/theme.css -->
+    <!-- Look / colors / titles: css/theme.css -->
     <link rel="stylesheet" href="./css/theme.css" />
     <link rel="stylesheet" href="./css/styles.css" />
     <script>
@@ -45,76 +45,6 @@
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
-
-    <!-- Stickers: drawings live here. Move / resize them in css/theme.css -->
-    <div class="stickers" aria-hidden="true">
-      <svg class="stickers__sprite" focusable="false">
-        <symbol id="sticker-star" viewBox="0 0 80 80">
-          <path fill="#d089a0" stroke="#fff" stroke-width="7" stroke-linejoin="round" paint-order="stroke fill" d="M40 4 50 30h27L55 47l8 27-23-16-23 16 8-27L3 30h27Z"/>
-        </symbol>
-        <symbol id="sticker-sparkle" viewBox="0 0 80 80">
-          <path fill="#1a1a1a" stroke="#fff" stroke-width="7" stroke-linejoin="round" paint-order="stroke fill" d="M40 4 47 33h29L47 47 40 76 33 47H4l29-14Z"/>
-          <path fill="#fff" opacity=".4" d="M40 16 44 34h18L44 46 40 64 36 46H18l18-12Z"/>
-        </symbol>
-        <symbol id="sticker-heart" viewBox="0 0 80 80">
-          <path fill="#d089a0" stroke="#fff" stroke-width="7" stroke-linejoin="round" paint-order="stroke fill" d="M40 70C16 52 8 38 8 26c0-10 8-16 18-14 6 1 10 6 14 12 4-6 8-11 14-12 10-2 18 4 18 14 0 12-8 26-32 44Z"/>
-          <ellipse cx="28" cy="28" rx="7" ry="5" fill="#fff" opacity=".55"/>
-        </symbol>
-        <symbol id="sticker-cherry" viewBox="0 0 80 80">
-          <path fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" d="M40 10c-2 16-14 24-22 32M40 10c2 16 12 22 22 30"/>
-          <path fill="none" stroke="#2f6b3a" stroke-width="3.4" stroke-linecap="round" d="M40 12c-2 14-12 22-20 30M40 12c2 14 11 20 20 28"/>
-          <path fill="#3d8a4c" stroke="#fff" stroke-width="5" stroke-linejoin="round" paint-order="stroke fill" d="M40 10c8 2 16-2 18 6-8 1-14 6-18 12-2-8 0-16 0-18Z"/>
-          <circle cx="24" cy="54" r="16" fill="#d089a0" stroke="#fff" stroke-width="6" paint-order="stroke fill"/>
-          <circle cx="56" cy="50" r="15" fill="#d089a0" stroke="#fff" stroke-width="6" paint-order="stroke fill"/>
-          <ellipse cx="19" cy="48" rx="5" ry="3.5" fill="#fff" opacity=".5"/>
-          <ellipse cx="51" cy="44" rx="4.5" ry="3" fill="#fff" opacity=".5"/>
-        </symbol>
-        <symbol id="sticker-bolt" viewBox="0 0 80 80">
-          <path fill="#d089a0" stroke="#fff" stroke-width="7" stroke-linejoin="round" paint-order="stroke fill" d="m44 6-26 34h18L22 74l38-36H44l16-32Z"/>
-        </symbol>
-        <symbol id="sticker-daisy" viewBox="0 0 80 80">
-          <g transform="translate(40 40)" fill="#fff">
-            <ellipse rx="8" ry="20" stroke="#fff" stroke-width="6"/>
-            <ellipse rx="8" ry="20" stroke="#fff" stroke-width="6" transform="rotate(45)"/>
-            <ellipse rx="8" ry="20" stroke="#fff" stroke-width="6" transform="rotate(90)"/>
-            <ellipse rx="8" ry="20" stroke="#fff" stroke-width="6" transform="rotate(135)"/>
-          </g>
-          <g transform="translate(40 40)" fill="#fff">
-            <ellipse rx="7" ry="18"/>
-            <ellipse rx="7" ry="18" transform="rotate(45)"/>
-            <ellipse rx="7" ry="18" transform="rotate(90)"/>
-            <ellipse rx="7" ry="18" transform="rotate(135)"/>
-          </g>
-          <circle cx="40" cy="40" r="12" fill="#d089a0"/>
-          <circle cx="40" cy="40" r="6" fill="#d089a0"/>
-        </symbol>
-        <symbol id="sticker-smiley" viewBox="0 0 80 80">
-          <circle cx="40" cy="40" r="30" fill="#d089a0" stroke="#fff" stroke-width="7" paint-order="stroke fill"/>
-          <circle cx="30" cy="34" r="4.2" fill="#1a1a1a"/>
-          <circle cx="50" cy="34" r="4.2" fill="#1a1a1a"/>
-          <path fill="none" stroke="#1a1a1a" stroke-width="3.4" stroke-linecap="round" d="M28 50c4 8 20 8 24 0"/>
-          <circle cx="24" cy="42" r="5" fill="#d089a0" opacity=".85"/>
-          <circle cx="56" cy="42" r="5" fill="#d089a0" opacity=".85"/>
-        </symbol>
-        <symbol id="sticker-saturn" viewBox="0 0 80 80">
-          <ellipse cx="40" cy="42" rx="36" ry="12" transform="rotate(-24 40 42)" fill="none" stroke="#fff" stroke-width="9"/>
-          <ellipse cx="40" cy="42" rx="36" ry="12" transform="rotate(-24 40 42)" fill="none" stroke="#d9dde3" stroke-width="4"/>
-          <circle cx="40" cy="40" r="18" fill="#d089a0" stroke="#fff" stroke-width="6" paint-order="stroke fill"/>
-          <ellipse cx="34" cy="34" rx="7" ry="4" fill="#fff" opacity=".45"/>
-          <path fill="none" stroke="#d9dde3" stroke-width="4" d="M16 48c8 6 22 8 32 2" transform="rotate(-24 40 42)"/>
-        </symbol>
-      </svg>
-      <span class="sticker sticker--star sticker--1"><svg viewBox="0 0 80 80" focusable="false"><use href="#sticker-star"/></svg></span>
-      <span class="sticker sticker--sparkle sticker--2"><svg viewBox="0 0 80 80" focusable="false"><use href="#sticker-sparkle"/></svg></span>
-      <span class="sticker sticker--heart sticker--3"><svg viewBox="0 0 80 80" focusable="false"><use href="#sticker-heart"/></svg></span>
-      <span class="sticker sticker--cherry sticker--4"><svg viewBox="0 0 80 80" focusable="false"><use href="#sticker-cherry"/></svg></span>
-      <span class="sticker sticker--bolt sticker--5"><svg viewBox="0 0 80 80" focusable="false"><use href="#sticker-bolt"/></svg></span>
-      <span class="sticker sticker--daisy sticker--6"><svg viewBox="0 0 80 80" focusable="false"><use href="#sticker-daisy"/></svg></span>
-      <span class="sticker sticker--smiley sticker--7"><svg viewBox="0 0 80 80" focusable="false"><use href="#sticker-smiley"/></svg></span>
-      <span class="sticker sticker--saturn sticker--8"><svg viewBox="0 0 80 80" focusable="false"><use href="#sticker-saturn"/></svg></span>
-      <span class="sticker sticker--star sticker--9"><svg viewBox="0 0 80 80" focusable="false"><use href="#sticker-star"/></svg></span>
-      <span class="sticker sticker--sparkle sticker--10"><svg viewBox="0 0 80 80" focusable="false"><use href="#sticker-sparkle"/></svg></span>
-    </div>
 
     <!-- ===== HEADER / NAVIGATION =====
          Edit labels here. Shop URL is in js/content.js (links.shop). -->
@@ -222,6 +152,10 @@
       <!-- ===== MUSIC =====
            Song titles, artwork, and Spotify URLs come from js/content.js -->
       <section id="music" class="section music" aria-labelledby="music-heading">
+        <div class="section-stickers" aria-hidden="true">
+          <img class="section-sticker section-sticker--a" src="public/images/stickers/vinyl.png" alt="">
+          <img class="section-sticker section-sticker--b" src="public/images/stickers/headphones.png" alt="">
+        </div>
         <div class="section__inner">
           <div class="section__header">
             <div>
@@ -240,6 +174,10 @@
       <!-- ===== VIDEO =====
            Titles and YouTube URLs come from js/content.js -->
       <section id="videos" class="section videos" aria-labelledby="videos-heading">
+        <div class="section-stickers" aria-hidden="true">
+          <img class="section-sticker section-sticker--a" src="public/images/stickers/vhs.png" alt="">
+          <img class="section-sticker section-sticker--b" src="public/images/stickers/remote.png" alt="">
+        </div>
         <div class="section__inner">
           <div class="section__header">
             <div>
@@ -264,6 +202,10 @@
       <!-- ===== LATEST UPDATES =====
            Announcement cards come from js/content.js (max 3) -->
       <section id="updates" class="section updates" aria-labelledby="updates-heading" hidden>
+        <div class="section-stickers" aria-hidden="true">
+          <img class="section-sticker section-sticker--a" src="public/images/stickers/radio.png" alt="">
+          <img class="section-sticker section-sticker--b" src="public/images/stickers/watch.png" alt="">
+        </div>
         <div class="section__inner">
           <div class="section__header">
             <div>
@@ -278,6 +220,10 @@
       <!-- ===== GALLERY =====
            Photos come from js/content.js. Mobile shows 1, desktop shows 3. -->
       <section id="gallery" class="section gallery" aria-labelledby="gallery-heading" hidden>
+        <div class="section-stickers" aria-hidden="true">
+          <img class="section-sticker section-sticker--a" src="public/images/stickers/camera.png" alt="">
+          <img class="section-sticker section-sticker--b" src="public/images/stickers/film.png" alt="">
+        </div>
         <div class="section__inner">
           <div class="section__header">
             <div>
@@ -305,6 +251,10 @@
            Wording and the form service URL come from js/content.js.
            Messages are sent to that service; nothing is stored on this site. -->
       <section id="contact" class="section contact" aria-labelledby="contact-heading">
+        <div class="section-stickers" aria-hidden="true">
+          <img class="section-sticker section-sticker--a" src="public/images/stickers/phone.png" alt="">
+          <span class="section-sticker section-sticker--b section-sticker--glyph"></span>
+        </div>
         <div class="section__inner contact__inner">
           <p class="section__eyebrow" data-contact-eyebrow>Business Enquiries</p>
           <h2 class="section__title" id="contact-heading" data-contact-title>Contact</h2>
@@ -345,6 +295,10 @@
            Wording and the Mailchimp form URL come from js/content.js.
            Submitting posts straight to Mailchimp; no keys live in this code. -->
       <section id="mailing-list" class="section mailing" aria-labelledby="mailing-heading">
+        <div class="section-stickers" aria-hidden="true">
+          <img class="section-sticker section-sticker--a" src="public/images/stickers/mail.svg" alt="">
+          <span class="section-sticker section-sticker--b section-sticker--glyph"></span>
+        </div>
         <div class="section__inner mailing__inner">
           <p class="section__eyebrow" data-mailing-eyebrow>Newsletter</p>
           <h2 class="section__title" id="mailing-heading" data-mailing-title>Mailing List</h2>
@@ -406,7 +360,8 @@
          Wording comes from js/content.js. Social URLs reuse the `links` object. -->
     <footer class="site-footer">
       <div class="site-footer__inner">
-        <a class="logo site-footer__logo" href="#top" data-footer-name>Nini</a>
+        <a class="site-footer__signoff" href="#top" data-footer-name>xoxo,
+Nini Uppuluri :)</a>
         <p class="site-footer__copy" data-footer-copy></p>
         <nav class="site-footer__nav" aria-label="Footer">
           <a href="#music">Music</a>
