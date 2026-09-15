@@ -6,7 +6,7 @@
    1. Page colors  -> LIGHT / DARK sections below
    2. Pink accent  -> --pink (one color for buttons, titles, headers)
    3. Circle glows -> --page-glow in LIGHT / DARK
-   4. Title look   -> cutout letters (hero + section titles) / TITLE LOOK (About heading)
+   4. Title look   -> cutout letters (hero + section titles) / TITLE LOOK (About star)
 */
 
 :root {
@@ -24,9 +24,9 @@
   --scroll-thumb: #8a8680;
   --scroll-thumb-hover: #6e6b64;
 
-  /* Title look: pink star behind the About heading. */
-  --title-star-size: 3.2em;
-  --title-star-size-mobile: 2.85em;
+  /* Title look: small pink star beside the About eyebrow. */
+  --title-star-size: 1.05rem;
+  --title-star-size-mobile: 0.95rem;
   --title-star-rotate: 8deg;
   --title-star-color: var(--pink);
 }
