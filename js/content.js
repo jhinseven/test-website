@@ -205,9 +205,9 @@ export const siteContent = {
     viewAllHref: "https://www.youtube.com/channel/UC96TGOrWeIWxr6noks2ipzw/shorts",
     items: [
       "https://youtube.com/shorts/yqPfGaaWG60?si=OS5ViC2e1DvqXKK7",
-      "https://youtube.com/shorts/DbO1qAgBj_Q?si=HBeOkyZcz79ITFJ2",
+      "https://youtube.com/shorts/4hndf4e-4YY?si=9vY9pLh0sBIJTDC1",
       "https://youtu.be/djrM2wf8yyk?t=4",
-      "https://youtu.be/LWDWeDdyBko",
+      "https://youtube.com/shorts/-xpud-o1ux4?si=Cq_6tTaLrYr0pZDT",
     ],
   },
 
