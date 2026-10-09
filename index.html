@@ -116,6 +116,10 @@
           <div class="hero__media">
             <div class="hero__visual">
               <img class="hero__image" data-hero-visual alt="" hidden />
+              <span class="hero__visual-sparkle hero__visual-sparkle--1" aria-hidden="true"></span>
+              <span class="hero__visual-sparkle hero__visual-sparkle--2" aria-hidden="true"></span>
+              <span class="hero__visual-sparkle hero__visual-sparkle--3" aria-hidden="true"></span>
+              <span class="hero__visual-sparkle hero__visual-sparkle--4" aria-hidden="true"></span>
             </div>
             <a class="hero__promo" data-hero-promo hidden>
               <span class="hero__promo-sparkle hero__promo-sparkle--1" aria-hidden="true"></span>
@@ -162,12 +166,16 @@
               <p class="section__eyebrow">Listen</p>
               <h2 class="section__title" id="music-heading" data-music-title>Music</h2>
             </div>
-            <a class="btn btn--ghost" data-music-view-all target="_blank" href="[REPLACE_WITH_SPOTIFY_URL]">View All Music</a>
+            <a class="btn btn--ghost" data-music-view-all target="_blank" href="https://open.spotify.com/artist/13XNrE7VNUoipQC30YNyHA">View All Music</a>
           </div>
-          <div data-music-banner hidden></div>
           <div data-music-featured></div>
           <div class="music__grid" data-music-grid></div>
-          <div id="music-all" class="music__extra" data-music-extra hidden></div>
+          <div class="music__more" id="music-more" data-music-more hidden>
+            <div class="music__more-inner">
+              <div class="music__grid" data-music-extra></div>
+            </div>
+          </div>
+          <button type="button" class="catalog-more-toggle" data-music-show-more hidden>Show more music</button>
         </div>
       </section>
 
@@ -184,11 +192,16 @@
               <p class="section__eyebrow">Watch</p>
               <h2 class="section__title" id="videos-heading" data-videos-title>Videos</h2>
             </div>
-            <a class="btn btn--ghost" data-videos-view-all target="_blank" rel="noopener noreferrer" href="[REPLACE_WITH_YOUTUBE_URL]">View All Videos</a>
+            <a class="btn btn--ghost" data-videos-view-all target="_blank" rel="noopener noreferrer" href="https://www.youtube.com/channel/UC96TGOrWeIWxr6noks2ipzw">View All Videos</a>
           </div>
           <div data-videos-featured></div>
           <div class="videos__grid" data-videos-grid></div>
-          <div id="videos-all" class="videos__extra" data-videos-extra hidden></div>
+          <div class="videos__more" id="videos-more" data-videos-more hidden>
+            <div class="videos__more-inner">
+              <div class="videos__grid" data-videos-extra></div>
+            </div>
+          </div>
+          <button type="button" class="catalog-more-toggle" data-videos-show-more hidden>Show more videos</button>
           <div class="shorts" data-shorts hidden>
             <div class="shorts__header">
               <h3 class="shorts__title" data-shorts-title>Shorts</h3>
@@ -327,6 +340,25 @@
         </div>
       </section>
     </main>
+
+    <dialog class="announce" data-announce aria-labelledby="announce-title">
+      <div class="announce__card">
+        <span class="announce__sparkle announce__sparkle--1" aria-hidden="true"></span>
+        <span class="announce__sparkle announce__sparkle--2" aria-hidden="true"></span>
+        <span class="announce__sparkle announce__sparkle--3" aria-hidden="true"></span>
+        <span class="announce__sparkle announce__sparkle--4" aria-hidden="true"></span>
+        <span class="announce__sparkle announce__sparkle--5" aria-hidden="true"></span>
+        <span class="announce__sparkle announce__sparkle--6" aria-hidden="true"></span>
+        <button type="button" class="announce__close" data-announce-close aria-label="Close">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M6 6l12 12M18 6 6 18"/>
+          </svg>
+        </button>
+        <img class="announce__art" data-announce-art alt="" hidden />
+        <h2 class="announce__title" id="announce-title" data-announce-title>Out now</h2>
+        <a class="btn btn--primary announce__cta" data-announce-cta>Listen now</a>
+      </div>
+    </dialog>
 
     <dialog class="gallery-overlay" data-gallery-overlay aria-labelledby="gallery-overlay-title">
       <div class="gallery-overlay__panel">

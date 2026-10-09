@@ -394,65 +394,26 @@ function attachSpotifyController(host, embedUrl, featured) {
   });
 }
 
-function createMusicBanner(banner) {
-  if (!banner || isPlaceholder(banner.href) || isPlaceholder(banner.artwork)) {
-    return null;
-  }
+function bindCatalogMore(section, restWrap, toggle, moreLabel, lessLabel, onToggle) {
+  if (!section || !restWrap || !toggle) return;
 
-  const link = document.createElement("a");
-  link.className = "music-banner";
-  link.href = banner.href;
-  link.setAttribute(
-    "aria-label",
-    banner.title ? `Pre-save ${banner.title}` : banner.label || "Pre-save"
-  );
-  if (/^https?:\/\//i.test(banner.href)) {
-    link.target = "_blank";
-    link.rel = "noopener noreferrer";
-  }
+  restWrap.hidden = false;
+  restWrap.setAttribute("aria-hidden", "true");
+  restWrap.inert = true;
+  toggle.hidden = false;
+  toggle.setAttribute("aria-expanded", "false");
+  toggle.setAttribute("aria-controls", restWrap.id);
+  toggle.textContent = moreLabel;
 
-  const art = document.createElement("img");
-  art.className = "music-banner__art";
-  art.src = banner.artwork;
-  art.alt = banner.artworkAlt || banner.title || "";
-
-  const panel = document.createElement("span");
-  panel.className = "music-banner__panel";
-
-  const wash = document.createElement("img");
-  wash.className = "music-banner__wash";
-  wash.src = banner.artwork;
-  wash.alt = "";
-  wash.setAttribute("aria-hidden", "true");
-
-  const promo = document.createElement("span");
-  promo.className = "music-banner__promo";
-
-  for (let i = 1; i <= 5; i += 1) {
-    const sparkle = document.createElement("span");
-    sparkle.className = `hero__promo-sparkle hero__promo-sparkle--${i}`;
-    sparkle.setAttribute("aria-hidden", "true");
-    promo.appendChild(sparkle);
-  }
-
-  const pointer = document.createElement("span");
-  pointer.className = "hero__promo-pointer";
-  pointer.setAttribute("aria-hidden", "true");
-  const cursor = document.createElement("img");
-  cursor.src = "public/images/y2k-cursor.png";
-  cursor.alt = "";
-  pointer.appendChild(cursor);
-  promo.appendChild(pointer);
-
-  const label = document.createElement("span");
-  label.className = "hero__promo-label";
-  label.textContent = banner.label || "Pre-save now!";
-  label.setAttribute("data-hero-promo-label", banner.label || "Pre-save now!");
-  promo.appendChild(label);
-
-  panel.append(wash, promo);
-  link.append(art, panel);
-  return link;
+  toggle.addEventListener("click", () => {
+    const open = !section.classList.contains("is-expanded");
+    section.classList.toggle("is-expanded", open);
+    restWrap.inert = !open;
+    restWrap.setAttribute("aria-hidden", String(!open));
+    toggle.setAttribute("aria-expanded", String(open));
+    toggle.textContent = open ? lessLabel : moreLabel;
+    onToggle?.(open);
+  });
 }
 
 function createTrackCard(track, featured = false) {
@@ -497,56 +458,57 @@ function renderMusic() {
   const music = siteContent.music;
   if (!music) return;
 
+  const section = document.querySelector("#music");
   const titleEl = document.querySelector("[data-music-title]");
-  const bannerEl = document.querySelector("[data-music-banner]");
   const featuredEl = document.querySelector("[data-music-featured]");
   const gridEl = document.querySelector("[data-music-grid]");
   const extraEl = document.querySelector("[data-music-extra]");
+  const moreWrap = document.querySelector("[data-music-more]");
+  const showMoreEl = document.querySelector("[data-music-show-more]");
   const viewAllEl = document.querySelector("[data-music-view-all]");
 
   if (titleEl) renderCutoutTitle(titleEl, music.sectionTitle);
-  if (bannerEl) {
-    const banner = createMusicBanner(music.banner);
-    if (banner) {
-      bannerEl.replaceChildren(banner);
-      bannerEl.hidden = false;
-    } else {
-      bannerEl.replaceChildren();
-      bannerEl.hidden = true;
-    }
-  }
   if (featuredEl && music.featured) {
     featuredEl.replaceChildren(createTrackCard(music.featured, true));
   }
+
+  const tracks = (music.tracks || []).filter(
+    (track) => !isPlaceholder(track.spotifyUrl)
+  );
+  const preview = tracks.slice(0, 3);
+  const rest = tracks.slice(3);
+
   if (gridEl) {
-    gridEl.replaceChildren(
-      ...music.tracks.slice(0, 6).map((track) => createTrackCard(track))
-    );
+    gridEl.replaceChildren(...preview.map((track) => createTrackCard(track)));
+  }
+  if (extraEl) {
+    extraEl.replaceChildren(...rest.map((track) => createTrackCard(track)));
   }
   mountSpotifyEmbeds();
 
+  if (rest.length) {
+    bindCatalogMore(
+      section,
+      moreWrap,
+      showMoreEl,
+      music.showMoreLabel || "Show more music",
+      music.showLessLabel || "Show less",
+      (open) => {
+        if (open) mountSpotifyEmbeds();
+      }
+    );
+  }
+
   if (viewAllEl) {
     viewAllEl.textContent = music.viewAllLabel;
-    const hasMore = Array.isArray(music.more) && music.more.length > 0;
-    const hasHref = !isPlaceholder(music.viewAllHref);
-
-    if (hasHref) {
-      viewAllEl.setAttribute("href", music.viewAllHref);
-      viewAllEl.removeAttribute("hidden");
-    } else if (hasMore && extraEl) {
-      viewAllEl.setAttribute("href", "#music-all");
-      viewAllEl.removeAttribute("hidden");
-      extraEl.replaceChildren(
-        ...music.more.map((track) => createTrackCard(track))
-      );
-      mountSpotifyEmbeds();
-      viewAllEl.addEventListener("click", (event) => {
-        event.preventDefault();
-        extraEl.hidden = false;
-        extraEl.scrollIntoView({ behavior: "smooth", block: "start" });
-      });
+    const href = !isPlaceholder(music.viewAllHref)
+      ? music.viewAllHref
+      : links.spotify;
+    if (!isPlaceholder(href)) {
+      viewAllEl.setAttribute("href", href);
+      viewAllEl.hidden = false;
     } else {
-      viewAllEl.setAttribute("href", links.spotify);
+      viewAllEl.hidden = true;
     }
   }
 }
@@ -845,49 +807,53 @@ function renderVideos() {
   const videos = siteContent.videos;
   if (!videos) return;
 
+  const section = document.querySelector("#videos");
   const titleEl = document.querySelector("[data-videos-title]");
   const featuredEl = document.querySelector("[data-videos-featured]");
   const gridEl = document.querySelector("[data-videos-grid]");
   const extraEl = document.querySelector("[data-videos-extra]");
+  const moreWrap = document.querySelector("[data-videos-more]");
+  const showMoreEl = document.querySelector("[data-videos-show-more]");
   const viewAllEl = document.querySelector("[data-videos-view-all]");
 
   if (titleEl) renderCutoutTitle(titleEl, videos.sectionTitle);
   if (featuredEl && videos.featured) {
     featuredEl.replaceChildren(createVideoCard(videos.featured, true));
   }
+
+  const items = (videos.items || []).filter(
+    (video) => !isPlaceholder(video.videoUrl)
+  );
+  const preview = items.slice(0, 3);
+  const rest = items.slice(3);
+
   if (gridEl) {
-    gridEl.replaceChildren(
-      ...(videos.items || [])
-        .filter((video) => !isPlaceholder(video.videoUrl))
-        .slice(0, 7)
-        .map((video) => createVideoCard(video))
+    gridEl.replaceChildren(...preview.map((video) => createVideoCard(video)));
+  }
+  if (extraEl) {
+    extraEl.replaceChildren(...rest.map((video) => createVideoCard(video)));
+  }
+
+  if (rest.length) {
+    bindCatalogMore(
+      section,
+      moreWrap,
+      showMoreEl,
+      videos.showMoreLabel || "Show more videos",
+      videos.showLessLabel || "Show less",
+      null
     );
   }
 
   if (viewAllEl) {
     viewAllEl.textContent = videos.viewAllLabel;
-    const hasMore = Array.isArray(videos.more) && videos.more.length > 0;
-    const hasHref = !isPlaceholder(videos.viewAllHref);
-
-    if (hasHref) {
-      viewAllEl.setAttribute("href", videos.viewAllHref);
-      viewAllEl.hidden = false;
-    } else if (hasMore && extraEl) {
-      viewAllEl.hidden = false;
-      viewAllEl.setAttribute("href", "#videos-all");
-      extraEl.replaceChildren(
-        ...videos.more.map((video) => createVideoCard(video))
-      );
-      viewAllEl.addEventListener("click", (event) => {
-        event.preventDefault();
-        extraEl.hidden = false;
-        extraEl.scrollIntoView({ behavior: "smooth", block: "start" });
-      });
-    } else if (!isPlaceholder(links.youtube)) {
-      viewAllEl.setAttribute("href", links.youtube);
+    const href = !isPlaceholder(videos.viewAllHref)
+      ? videos.viewAllHref
+      : links.youtube;
+    if (!isPlaceholder(href)) {
+      viewAllEl.setAttribute("href", href);
       viewAllEl.hidden = false;
     } else {
-      // No real YouTube link yet, so hide the button instead of linking nowhere.
       viewAllEl.hidden = true;
     }
   }
@@ -1826,9 +1792,139 @@ function renderFooter() {
   }
 }
 
+function prefersReducedMotion() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+function spawnStarSparkles({
+  x,
+  y,
+  count = 8,
+  host = document.body,
+  distMin = 36,
+  distMax = 74,
+  sizeMin = 1.05,
+  sizeMax = 1.75,
+  extraClass = "",
+}) {
+  for (let i = 0; i < count; i += 1) {
+    const sparkle = document.createElement("span");
+    sparkle.className = [
+      "click-sparkle",
+      i % 2 === 0 ? "" : "click-sparkle--star",
+      extraClass,
+    ]
+      .filter(Boolean)
+      .join(" ");
+    sparkle.setAttribute("aria-hidden", "true");
+    const angle = (Math.PI * 2 * i) / count + Math.random() * 0.35;
+    const dist = distMin + Math.random() * (distMax - distMin);
+    sparkle.style.left = `${x}px`;
+    sparkle.style.top = `${y}px`;
+    sparkle.style.setProperty("--sparkle-x", `${Math.cos(angle) * dist}px`);
+    sparkle.style.setProperty("--sparkle-y", `${Math.sin(angle) * dist}px`);
+    sparkle.style.width = sparkle.style.height = `${sizeMin + Math.random() * (sizeMax - sizeMin)}rem`;
+    host.append(sparkle);
+    sparkle.addEventListener("animationend", () => sparkle.remove(), { once: true });
+  }
+}
+
+function burstAround(el, host) {
+  if (prefersReducedMotion() || !el) return;
+  const rect = el.getBoundingClientRect();
+  spawnStarSparkles({
+    x: rect.left + rect.width / 2,
+    y: rect.top + rect.height / 2,
+    count: 18,
+    host,
+    distMin: 72,
+    distMax: 150,
+    sizeMin: 1.15,
+    sizeMax: 2.1,
+    extraClass: "click-sparkle--burst",
+  });
+}
+
+function initClickSparkles() {
+  if (prefersReducedMotion()) return;
+
+  const skip = "input, textarea, select, option";
+
+  document.addEventListener("pointerdown", (event) => {
+    if (event.pointerType === "touch" && event.isPrimary === false) return;
+    if (event.target.closest?.(skip)) return;
+
+    spawnStarSparkles({ x: event.clientX, y: event.clientY });
+  });
+}
+
+function initAnnounce() {
+  const dialog = document.querySelector("[data-announce]");
+  const card = dialog?.querySelector(".announce__card");
+  const closeBtn = dialog?.querySelector("[data-announce-close]");
+  const artEl = dialog?.querySelector("[data-announce-art]");
+  const titleEl = dialog?.querySelector("[data-announce-title]");
+  const ctaEl = dialog?.querySelector("[data-announce-cta]");
+  const announce = siteContent.announce || {};
+
+  if (!dialog || isPlaceholder(announce.href) || !announce.title) return;
+
+  if (titleEl) titleEl.textContent = announce.title;
+  if (ctaEl) {
+    ctaEl.textContent = announce.cta || "Listen now";
+    ctaEl.setAttribute("href", announce.href);
+    if (/^https?:\/\//i.test(announce.href)) {
+      ctaEl.target = "_blank";
+      ctaEl.rel = "noopener noreferrer";
+    }
+  }
+  if (artEl && announce.artwork && !isPlaceholder(announce.artwork)) {
+    artEl.src = announce.artwork;
+    artEl.alt = announce.artworkAlt || announce.title;
+    artEl.hidden = false;
+  }
+
+  const key = `nini-announce:${announce.title}`;
+  try {
+    if (sessionStorage.getItem(key)) return;
+  } catch {
+    return;
+  }
+
+  const markSeen = () => {
+    try {
+      sessionStorage.setItem(key, "1");
+    } catch {
+      /* ignore */
+    }
+  };
+
+  const close = () => {
+    markSeen();
+    if (typeof dialog.close === "function" && dialog.open) dialog.close();
+    else dialog.removeAttribute("open");
+  };
+
+  closeBtn?.addEventListener("click", close);
+  ctaEl?.addEventListener("click", markSeen);
+  dialog.addEventListener("click", (event) => {
+    if (event.target === dialog) close();
+  });
+  dialog.addEventListener("cancel", markSeen);
+
+  if (typeof dialog.showModal === "function") dialog.showModal();
+  else dialog.setAttribute("open", "");
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => burstAround(card, dialog));
+  });
+}
+
 initTheme();
 initNav();
+initClickSparkles();
 renderHero();
+initAnnounce();
 renderAbout();
 renderMusic();
 renderVideos();

@@ -12,6 +12,16 @@ export const siteContent = {
   seoDescription:
     "Official website of Nini Uppuluri — a 15-year-old pop artist.",
 
+  // ===== EDIT THIS: GREETING CARD =====
+  // First-visit card. Leave the href as a placeholder to hide it.
+  announce: {
+    title: "Out now!",
+    cta: "Click here to listen",
+    artwork: "public/images/nini-hero.jpg",
+    artworkAlt: "Believe — Nini Uppuluri",
+    href: "https://open.spotify.com/track/5A0UBbieQXwtmkOyFzHhjv?si=0b4bbca4e44f44f6",
+  },
+
   hero: {
     // ===== EDIT THIS: HERO TITLE & TAGLINE =====
     title: "Nini Uppuluri",
@@ -20,8 +30,8 @@ export const siteContent = {
     // Shown under the tagline. Change the label and href when the featured
     // song changes. Leave the href as a placeholder to hide the line.
     promo: {
-      label: "Pre-save now!",
-      href: "https://distrokid.com/hyperfollow/niniuppuluri/believe-2?ref=release",
+      label: "Listen Now!",
+      href: "https://open.spotify.com/track/5A0UBbieQXwtmkOyFzHhjv?si=0b4bbca4e44f44f6",
     },
     // ===== EDIT THIS: NINI HERO IMAGE =====
     // Replace the placeholder below with the final image path, e.g. "/public/images/nini-hero.jpg"
@@ -68,30 +78,29 @@ export const siteContent = {
   },
 
   // ===== EDIT THIS: FEATURED MUSIC =====
-  // Add or replace songs here. The first item is the large featured player.
-  // The next 7 items appear in the grid under it.
+  // Featured is the large player. The next 3 tracks show under it.
+  // Anything after that is behind "Show more music". Add as many as you like.
   // Use a Spotify track or album URL (or an embed URL).
   // Example: "https://open.spotify.com/embed/track/REPLACE_WITH_TRACK_ID"
   music: {
     sectionTitle: "Music",
     viewAllLabel: "View All Music",
-    // If this is still a placeholder, the button will reveal extra songs below (if you add them).
+    showMoreLabel: "Show more music",
+    showLessLabel: "Show less",
     viewAllHref: "https://open.spotify.com/artist/13XNrE7VNUoipQC30YNyHA",
-    // Shown above Pretty Wings. Leave the href as a placeholder to hide it.
-    banner: {
-      title: "Believe",
-      artwork: "public/images/nini-hero.jpg",
-      artworkAlt: "Believe — Nini Uppuluri",
-      label: "Pre-save now!",
-      href: "https://distrokid.com/hyperfollow/niniuppuluri/believe-2?ref=release",
-    },
     featured: {
-      title: "Pretty Wings",
+      title: "BELIEVE",
       artist: "Nini Uppuluri",
       artwork: "public/images/nini-hero.jpg",
-      spotifyUrl: "https://open.spotify.com/embed/track/5tR2w78xV17M5q1nea5zyw?utm_source=generator&si=73933ea599ab4951",
+      spotifyUrl: "https://open.spotify.com/track/5A0UBbieQXwtmkOyFzHhjv?si=0b4bbca4e44f44f6",
     },
     tracks: [
+      {
+        title: "Pretty Wings",
+        artist: "Nini Uppuluri",
+        artwork: "public/images/nini-hero.jpg",
+        spotifyUrl: "https://open.spotify.com/embed/track/5tR2w78xV17M5q1nea5zyw?utm_source=generator&si=73933ea599ab4951",
+      },
       {
         title: "We Own The Now",
         artist: "Nini Uppuluri",
@@ -129,25 +138,32 @@ export const siteContent = {
         spotifyUrl: "https://open.spotify.com/embed/track/3X5NHem9EwAuGYli6JV4uj?utm_source=generator&si=9a334b1cc9174045",
       },
     ],
-    // Optional extra songs shown after "View All Music" is clicked.
-    more: [],
   },
 
   // ===== EDIT THIS: FEATURED VIDEO =====
-  // 1 featured YouTube video, then up to 7 in the grid under it.
+  // Featured is the large video. The next 3 show under it.
+  // Anything after that is behind "Show more videos". Add as many as you like.
   // Paste a normal YouTube watch URL or an embed URL.
   // Example: "https://www.youtube.com/watch?v=REPLACE_WITH_VIDEO_ID"
   videos: {
     sectionTitle: "Videos",
     viewAllLabel: "View All Videos",
-    viewAllHref: "[REPLACE_WITH_YOUTUBE_URL]",
+    showMoreLabel: "Show more videos",
+    showLessLabel: "Show less",
+    viewAllHref: "https://www.youtube.com/channel/UC96TGOrWeIWxr6noks2ipzw",
     featured: {
-      title: "Pretty Wings",
+      title: "BELIEVE",
       caption: "Visualizer / music video",
       thumbnail: "[REPLACE_WITH_FEATURED_VIDEO_THUMBNAIL]",
-      videoUrl: "https://youtu.be/NkEAQphst-8?si=Hm7KilFfxs-kEZUu",
+      videoUrl: "https://youtu.be/OlZKXgMkmkg?list=RDOlZKXgMkmkg&t=35",
     },
     items: [
+      {
+        title: "Pretty Wings",
+        caption: "Visualizer / music video",
+        thumbnail: "[REPLACE_WITH_VIDEO_1_THUMBNAIL]",
+        videoUrl: "https://youtu.be/NkEAQphst-8",
+      },
       {
         title: "We Own The Now",
         caption: "Visualizer / music video",
@@ -191,8 +207,6 @@ export const siteContent = {
         videoUrl: "https://youtu.be/bY1rV_ViHiQ?si=Mo4WUwSbWSmS5_NB",
       },
     ],
-    // Optional extra videos shown after "View All Videos" is clicked.
-    more: [],
   },
 
   // ===== EDIT THIS: SHORTS =====
@@ -204,7 +218,7 @@ export const siteContent = {
     viewAllLabel: "Watch more Shorts",
     viewAllHref: "https://www.youtube.com/channel/UC96TGOrWeIWxr6noks2ipzw/shorts",
     items: [
-      "https://youtube.com/shorts/r-5QRrb5YpE?si=xW2O0H72tV04PJOx",
+      "https://youtube.com/shorts/ZmNgP3NLcBY?si=CoKPtF05bN-1vKuY",
       "https://youtube.com/shorts/GF3jInTy1qg?si=2iiNPEN9GTJDQNIO",
       "https://youtube.com/shorts/yOuFJJrYeYU?si=QVE7eLA9bMtziowu",
       "https://youtube.com/shorts/-xpud-o1ux4?si=Cq_6tTaLrYr0pZDT",
@@ -289,8 +303,8 @@ export const siteContent = {
     emailLabel: "Email address",
     emailPlaceholder: "you@example.com",
     buttonLabel: "Subscribe",
-    successMessage: "Almost there — check your inbox to confirm.",
-    formAction: "https://gmail.us3.list-manage.com/subscribe/post?u=39fa9ff5f54c3443ce7cbbe4e&id=7273754a1b&f_id=00e6cee1f0",
+    successMessage: "You're in! 🎉",
+    formAction: "https://niniuppuluri.us1.list-manage.com/subscribe/post?u=3c2b6f7cbfa3b7b60d2444c7a&amp;id=8c5860617b&amp;f_id=00b6c4e4f0",
     honeypotName: "b_39fa9ff5f54c3443ce7cbbe4e_7273754a1b",
   },
 
