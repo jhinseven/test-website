@@ -218,9 +218,9 @@ export const siteContent = {
     viewAllLabel: "Watch more Shorts",
     viewAllHref: "https://www.youtube.com/channel/UC96TGOrWeIWxr6noks2ipzw/shorts",
     items: [
+      "https://youtube.com/shorts/t9kozWitVyE?si=IB5iTqMfxSAYIlvL",
+      "https://youtube.com/shorts/ENzKKxC_lzQ?si=uuwQGH2MfJ5ekf19",
       "https://youtube.com/shorts/ZmNgP3NLcBY?si=CoKPtF05bN-1vKuY",
-      "https://youtube.com/shorts/GF3jInTy1qg?si=2iiNPEN9GTJDQNIO",
-      "https://youtube.com/shorts/yOuFJJrYeYU?si=QVE7eLA9bMtziowu",
       "https://youtube.com/shorts/-xpud-o1ux4?si=Cq_6tTaLrYr0pZDT",
     ],
   },
