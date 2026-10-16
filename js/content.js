@@ -221,7 +221,7 @@ export const siteContent = {
       "https://youtube.com/shorts/t9kozWitVyE?si=IB5iTqMfxSAYIlvL",
       "https://youtube.com/shorts/ENzKKxC_lzQ?si=uuwQGH2MfJ5ekf19",
       "https://youtube.com/shorts/ZmNgP3NLcBY?si=CoKPtF05bN-1vKuY",
-      "https://youtube.com/shorts/-xpud-o1ux4?si=Cq_6tTaLrYr0pZDT",
+      "https://youtube.com/shorts/AASIGlSzbkQ?si=oS6r2yXVMNBfdvPE",
     ],
   },
 
