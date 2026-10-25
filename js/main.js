@@ -1867,7 +1867,7 @@ function initAnnounce() {
   const ctaEl = dialog?.querySelector("[data-announce-cta]");
   const announce = siteContent.announce || {};
 
-  if (!dialog || isPlaceholder(announce.href) || !announce.title) return;
+  if (!dialog || announce.enabled === false || isPlaceholder(announce.href) || !announce.title) return;
 
   if (titleEl) titleEl.textContent = announce.title;
   if (ctaEl) {

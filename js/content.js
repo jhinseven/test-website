@@ -13,8 +13,9 @@ export const siteContent = {
     "Official website of Nini Uppuluri — a 15-year-old pop artist.",
 
   // ===== EDIT THIS: GREETING CARD =====
-  // First-visit card. Leave the href as a placeholder to hide it.
+  // First-visit card. Set enabled to false to hide it for now.
   announce: {
+    enabled: false,
     title: "Out now!",
     cta: "Click here to listen",
     artwork: "public/images/nini-hero.jpg",
@@ -218,9 +219,9 @@ export const siteContent = {
     viewAllLabel: "Watch more Shorts",
     viewAllHref: "https://www.youtube.com/channel/UC96TGOrWeIWxr6noks2ipzw/shorts",
     items: [
-      "https://youtube.com/shorts/t9kozWitVyE?si=IB5iTqMfxSAYIlvL",
-      "https://youtube.com/shorts/ENzKKxC_lzQ?si=uuwQGH2MfJ5ekf19",
-      "https://youtube.com/shorts/ZmNgP3NLcBY?si=CoKPtF05bN-1vKuY",
+      "https://youtube.com/shorts/xzX-U25D-Yc?si=ox7LSPim9Tfbm6lG",
+      "https://youtube.com/shorts/66ibpAVJuJ0?si=tyQsWbwQ91g3muqy",
+      "https://youtube.com/shorts/A2aulTQO6E0?si=tQcN_KGrcTltcD9W",
       "https://youtube.com/shorts/AASIGlSzbkQ?si=oS6r2yXVMNBfdvPE",
     ],
   },
