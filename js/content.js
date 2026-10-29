@@ -36,7 +36,7 @@ export const siteContent = {
     },
     // ===== EDIT THIS: NINI HERO IMAGE =====
     // Replace the placeholder below with the final image path, e.g. "/public/images/nini-hero.jpg"
-    image: "public/images/nini-hero.png",
+    image: "public/images/nini-hero.jpg",
     imageAlt: "Nini Uppuluri",
     primaryCta: {
       label: "Listen Now",
