@@ -31,12 +31,12 @@ export const siteContent = {
     // Shown under the tagline. Change the label and href when the featured
     // song changes. Leave the href as a placeholder to hide the line.
     promo: {
-      label: "Listen Now!",
-      href: "https://open.spotify.com/track/5A0UBbieQXwtmkOyFzHhjv?si=0b4bbca4e44f44f6",
+      label: "Pre-save now!",
+      href: "https://distrokid.com/hyperfollow/niniuppuluri/receipts",
     },
     // ===== EDIT THIS: NINI HERO IMAGE =====
     // Replace the placeholder below with the final image path, e.g. "/public/images/nini-hero.jpg"
-    image: "public/images/nini-hero.jpg",
+    image: "public/images/nini-hero.png",
     imageAlt: "Nini Uppuluri",
     primaryCta: {
       label: "Listen Now",
